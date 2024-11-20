@@ -9,6 +9,7 @@ from .models import User, Product,  Inventory, Order
 import logging
 
 
+
 # Create your views here.
 
 def ping(request):
