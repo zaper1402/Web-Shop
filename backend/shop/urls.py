@@ -11,4 +11,5 @@ urlpatterns = [
     path('inventory/add/', views.add_inventory, name='add_inventory'),
     path('order/', views.place_order, name='order'),
     path('deleteAll/', views.clear_db, name='deleteAll'),
+    path('populate/', views.populate_db, name='populate'),
 ]

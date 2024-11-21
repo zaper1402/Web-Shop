@@ -1,8 +1,38 @@
-import { Card, CardActionArea, CardActions, Rating, CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, Card, CardActionArea, CardActions, Rating, CardContent, Typography, ButtonGroup, Button } from '@mui/material';
 import styles from './ProductCard.module.css'
+import { ContextFunction } from '../../../Context/Context';
+import React, { useEffect, useState, useContext } from 'react'
 
-export default function ProductCard({ prod }) {
+
+export default function ProductCard({ prod}) {
+    const { cart, setCart} = useContext(ContextFunction)
+    const [productQuantity, setProductQuantity] = useState(1)
+    const addToCart = async (product) => {
+        if (setProceed) {
+            try {
+                setCart([...cart, product])
+                toast.success("Added To Cart", { autoClose: 500, theme: 'colored' })
+            } catch (error) {
+                toast.error(error.response.data.msg, { autoClose: 500, theme: 'colored' })
+            }
+        }
+        else {
+            setOpenAlert(true);
+        }
+    }
+
+    const increaseQuantity = () => {
+        // setProductQuantity((prev) => prev + 1)
+        if (productQuantity >= 5) {
+            // setProductQuantity(5)
+        }
+    }
+    const decreaseQuantity = () => {
+        // setProductQuantity((prev) => prev - 1)
+        if (productQuantity <= 1) {
+            // setProductQuantity(1)
+        }
+    }
     return (
         <Card className={styles.main_card}>
             <CardActionArea className={styles.card_action}>
@@ -11,7 +41,7 @@ export default function ProductCard({ prod }) {
                 </Box>
                 <CardContent>
                     <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
-                        {prod.name.length > 20 ? prod.name.slice(0, 20) + '...' : prod.name}
+                        {prod.description.length > 20 ? prod.description.slice(0, 20) + '...' : prod.description}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -22,9 +52,14 @@ export default function ProductCard({ prod }) {
                 <Typography >
                     <Rating precision={0.5} name="read-only" value={prod.rating} readOnly />
                 </Typography>
-
+                <ButtonGroup variant="outlined" aria-label="outlined button group">
+                    <Button onClick={decreaseQuantity()}>-</Button>
+                    <Button>{productQuantity}</Button>
+                    <Button onClick={increaseQuantity()}>+</Button>
+                </ButtonGroup>
 
             </CardActions>
+            <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button>
         </Card >
     );
 }

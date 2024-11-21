@@ -18,7 +18,7 @@ const DesktopNavigation = () => {
   let setProceed = authToken !== null ? true : false
   useEffect(() => {
     getCart(setProceed, setCart, authToken)
-    getWishList(setProceed, setWishlistData, authToken)
+    // getWishList(setProceed, setWishlistData, authToken)
   }, [])
 
 

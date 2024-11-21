@@ -7,13 +7,14 @@ import CategoryCard from '../components/Category_Card/CategoryCard';
 import BannerData from '../Helpers/HomePageBanner.js';
 import Carousel from '../components/Carousel/Carousel'
 import SearchBar from '../components/SearchBar/SearchBar'
+import SingleCategory from '../components/SingleCategory/SingleCategory'
 
 
 const HomePage = () => {
     const { setCart } = useContext(ContextFunction)
     let authToken = localStorage.getItem('Authorization')
     useEffect(() => {
-        getCart()
+        // getCart()
         window.scroll(0, 0)
     }, [])
     const getCart = async () => {
@@ -29,8 +30,6 @@ const HomePage = () => {
 
     }
 
-
-
     return (
         <>
             <Container maxWidth='xl' style={{ display: 'flex', justifyContent: "center", padding: 0, flexDirection: "column", marginBottom: 70 }}>
@@ -42,11 +41,7 @@ const HomePage = () => {
                 </Container>
                 <Typography variant='h3' sx={{ textAlign: 'center', marginTop: 10, color: '#1976d2', fontWeight: 'bold' }}>Categories</Typography>
                 <Container maxWidth='xl' style={{ marginTop: 90, display: "flex", justifyContent: 'center', flexGrow: 1, flexWrap: 'wrap', gap: 20, }}>
-                    {
-                        BannerData.map(data => (
-                            <CategoryCard data={data} key={data.img} />
-                        ))
-                    }
+                    <SingleCategory />
                 </Container>
             </Container >
         </ >

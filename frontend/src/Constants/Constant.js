@@ -1,10 +1,11 @@
 import { Slide } from "@mui/material";
 import { forwardRef } from "react";
 import axios from 'axios';
+import {baseUrl, allProductsUrl,allInventoryUrl} from '../Constants/urls'
 
 const getCart = async (setProceed, setCart, authToken) => {
     if (setProceed) {
-        const { data } = await axios.get(`${process.env.REACT_APP_GET_CART}`,
+        const { data } = await axios.get(baseUrl + allInventoryUrl,
             {
                 headers: {
                     'Authorization': authToken
@@ -43,9 +44,19 @@ const handleClickOpen = (setOpenAlert) => {
 const handleClose = (setOpenAlert) => {
     setOpenAlert(false);
 };
+
+const getAllInventory = async (setData) => {
+    try {
+        const { data } = await axios.get(baseUrl + allInventoryUrl);
+        setData(data)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const getAllProducts = async (setData) => {
     try {
-        const { data } = await axios.get(process.env.REACT_APP_FETCH_PRODUCT);
+        const { data } = await axios.get(baseUrl + allProductsUrl);
         setData(data)
 
 

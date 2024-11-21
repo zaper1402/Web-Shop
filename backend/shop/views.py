@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.forms.models import model_to_dict
 from .models import User, Product,  Inventory, Order
 import logging
+import uuid
 
 
 
@@ -34,8 +35,10 @@ def signup(request):
         # Create and save the new user
         user = User(name=name, email=email, password=hashed_password)
         user.save()
-
-        return JsonResponse({'message': 'User created successfully'})
+        token = str(uuid.uuid4())
+        request.session['auth_token'] = token
+        print("auth" + request.session['auth_token'])
+        return JsonResponse({'message': 'User created successfully', 'token': token})
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
 
@@ -49,17 +52,31 @@ def login(request):
             user = User.objects.get(email=email)
             print(user.password, password)
             if check_password(password, user.password):
-                return JsonResponse({'message': 'Login successful', 'user': user.name})
+                token = str(uuid.uuid4())
+                request.session['auth_token'] = token
+                print("auth" + request.session['auth_token'])
+                return JsonResponse({'message': 'Login successful', 'user': user.name, 'token': token})
             else:
                 return JsonResponse({'error': 'Invalid password'}, status=401)
         except User.DoesNotExist:
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
-    
+
+def protected_view(request):
+    token = request.headers.get('Authorization')
+    print(f"token: {token} session: {request.session.get('auth_token')}")
+    if token != None and token == request.session.get('auth_token'):
+        # Token is valid
+        return None
+    else:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
 
 # Product operations
 def get_products(request):
+    error =  protected_view(request)
+    if not error is None:
+        return error
     products = Product.objects.all()
     data = []
     for product in products:
@@ -80,6 +97,7 @@ def get_inventory(request):
         product_data = model_to_dict(item.product, exclude=['image'])
         product_data['image'] = item.product.image.url if item.product.image else ''
         data.append({
+            'id': item.id,
             'user': model_to_dict(item.user),
             'product': product_data,
             'quantity': item.quantity
@@ -173,3 +191,35 @@ def clear_db(request):
     Product.objects.all().delete()
     User.objects.all().delete()
     return JsonResponse({'message': 'Database cleared successfully'})
+
+
+def populate_db(request):
+    # Clear the database
+    clear_db(request)
+
+    # Create 6 users
+    users = []  
+    for i in range(1, 7):
+        user = User.objects.create(
+            name=f'testuser{i}',
+            email=f'testuser{i}@shop.aa',
+            password=f'pass{i}'
+        )
+        users.append(user)
+
+    # For the first 3 users, add 10 products each to their inventory
+    for user in users[:3]:
+        for j in range(1, 11):
+            product = Product.objects.create(
+                name=f'Product {j}',
+                description='Sample description',
+                price=10.0 * j,
+                image='path/to/default/image.jpg'  # Update with a valid image path
+            )
+            Inventory.objects.create(
+                product=product,
+                quantity=10,
+                user=user
+            )
+
+    return JsonResponse({'message': 'Database populated successfully'})
