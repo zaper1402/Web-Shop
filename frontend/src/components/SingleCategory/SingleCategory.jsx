@@ -117,7 +117,7 @@ const SingleCategory = () => {
                 {loading}
                 <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
                     {productData.map(prod => (
-                        <ProductCard key={prod.id} prod={prod.product} />
+                        <ProductCard key={prod.id+prod.user.name} prod={prod.product} quantity={prod.quantity}/>
                     ))}
                 </Container>
             </Container >

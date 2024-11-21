@@ -4,7 +4,7 @@ import { ContextFunction } from '../../../Context/Context';
 import React, { useEffect, useState, useContext } from 'react'
 
 
-export default function ProductCard({ prod}) {
+export default function ProductCard({ prod, quantity}) {
     const { cart, setCart} = useContext(ContextFunction)
     const [productQuantity, setProductQuantity] = useState(1)
     const addToCart = async (product) => {
@@ -22,15 +22,13 @@ export default function ProductCard({ prod}) {
     }
 
     const increaseQuantity = () => {
-        // setProductQuantity((prev) => prev + 1)
-        if (productQuantity >= 5) {
-            // setProductQuantity(5)
+        if (productQuantity < quantity) {
+            setProductQuantity((prev) => prev +1)
         }
     }
     const decreaseQuantity = () => {
-        // setProductQuantity((prev) => prev - 1)
-        if (productQuantity <= 1) {
-            // setProductQuantity(1)
+        if (productQuantity > 1) {
+            setProductQuantity((prev) => prev -1)
         }
     }
     return (
@@ -53,9 +51,9 @@ export default function ProductCard({ prod}) {
                     <Rating precision={0.5} name="read-only" value={prod.rating} readOnly />
                 </Typography>
                 <ButtonGroup variant="outlined" aria-label="outlined button group">
-                    <Button onClick={decreaseQuantity()}>-</Button>
+                    <Button onClick={decreaseQuantity}>-</Button>
                     <Button>{productQuantity}</Button>
-                    <Button onClick={increaseQuantity()}>+</Button>
+                    <Button onClick={increaseQuantity}>+</Button>
                 </ButtonGroup>
 
             </CardActions>
