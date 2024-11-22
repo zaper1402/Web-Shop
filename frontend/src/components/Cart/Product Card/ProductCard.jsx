@@ -15,7 +15,6 @@ export default function ProductCard({ prod}) {
     const addToCart = async (product) => {
         if (setProceed) {
             try {
-                // add only if item doesnt exist else update the quantity of the item
                 const existingProductIndex = cart.findIndex(item => item.id === prod.id);
                 if (existingProductIndex !== -1) {
                     const updatedCart = [...cart];

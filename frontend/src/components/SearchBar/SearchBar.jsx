@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import { getAllProducts } from "../../Constants/Constant";
-const SearchBar = () => {
+const SearchBar = ({eventListener}) => {
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -17,17 +17,9 @@ const SearchBar = () => {
     }, [])
 
     const handleSearch = event => {
+        let value = event.target.value;
         setSearchTerm(event.target.value);
-        const newFilteredData = data.filter(item =>
-            (item.name && item.name.toLowerCase().includes(event.target.value.toLowerCase())) ||
-            (item.type && item.type.toLowerCase().includes(event.target.value.toLowerCase())) ||
-            (item.brand && item.brand.toLowerCase().includes(event.target.value.toLowerCase())) ||
-            (item.category && item.category.toLowerCase().includes(event.target.value.toLowerCase())) ||
-            (item.author && item.author.toLowerCase().includes(event.target.value.toLowerCase())) ||
-            (item.description && item.description.toLowerCase().includes(event.target.value.toLowerCase())) ||
-            (item.gender && item.gender.toLowerCase().includes(event.target.value.toLowerCase()))
-        );
-        setFilteredData(newFilteredData);
+        eventListener(event);
     };
 
 
@@ -44,7 +36,6 @@ const SearchBar = () => {
                 id="search"
                 type="search"
                 label="Search Products"
-
                 value={searchTerm}
                 onChange={handleSearch}
                 sx={{ width: { xs: 350, sm: 500, md: 800 }, }}
@@ -56,7 +47,7 @@ const SearchBar = () => {
                     ),
                 }}
             />
-            {
+            {/* {
                 searchTerm.length > 0 &&
                 <Box sx={{ width: { xs: 350, sm: 500, md: 800 }, overflowY: "scroll", height: "200px" }}>
                     <Stack spacing={0}>
@@ -73,7 +64,7 @@ const SearchBar = () => {
                             ))}
                     </Stack>
                 </Box>
-            }
+            } */}
         </Container >
     )
 }

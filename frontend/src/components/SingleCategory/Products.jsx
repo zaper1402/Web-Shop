@@ -1,4 +1,4 @@
-import './singlecategory.css'
+import './products.css'
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -8,13 +8,14 @@ import Loading from '../loading/Loading'
 import { BiFilterAlt } from 'react-icons/bi';
 import ProductCard from '../Cart/Product Card/ProductCard'
 import { baseUrl, allInventoryUrl } from '../../Constants/urls'
+import SearchBar from '../SearchBar/SearchBar'
 
 
-const SingleCategory = () => {
+const Products = () => {
 
     const [productData, setProductData] = useState([])
+    const [filteredData, setFilteredData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [filterOption, setFilterOption] = useState('All')
     const [title, setTitle] = useState('All')
     const { cat } = useParams()
 
@@ -42,31 +43,15 @@ const SingleCategory = () => {
             console.log(error);
         }
     }
-
-    const productFilter = []
-
-    if (cat === 'book') {
-        productFilter.push('All', 'Scifi', 'Business', 'Mystery', 'Cookbooks', 'Accessories', 'Price Low To High', 'Price High To Low', 'High Rated', 'Low Rated')
-    }
-    else if (cat === 'cloths') {
-        productFilter.push('All', 'Men', 'Women', 'Price Low To High', 'Price High To Low', 'High Rated', 'Low Rated')
-    }
-    else if (cat === 'shoe') {
-        productFilter.push('All', 'Running', 'Football', 'Formal', 'Casual', 'Price Low To High', 'Price High To Low', 'High Rated', 'Low Rated')
-    }
-    else if (cat === 'electronics') {
-        productFilter.push('All', 'Monitor', 'SSD', 'HDD', 'Price Low To High', 'Price High To Low', 'High Rated', 'Low Rated')
-
-    }
-    else if (cat === 'jewelry') {
-        productFilter.push('All')
-
-    }
     
 
     const handleChange = (e) => {
-        setFilterOption(e.target.value.split(" ").join("").toLowerCase())
-        setTitle(e.target.value)
+        //filter setProductData based on e.target.value
+        if( e.target.value === undefined || e.target.value === 'All' || e.target.value === ''){
+            setFilteredData(productData)
+        }else{
+            setFilteredData(productData.filter(prod => prod.product.name.includes(e.target.value)))
+        }
     }
 
     const loading = isLoading ?
@@ -80,27 +65,12 @@ const SingleCategory = () => {
     return (
         <>
             <Container maxWidth='xl' style={{ marginTop: 90, display: 'flex', justifyContent: "center", flexDirection: "column" }}>
-                < Box sx={{ minWidth: 140 }}>
-                    <FormControl sx={{ width: 140 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, width: "80vw" }}>
-                            <Button endIcon={<BiFilterAlt />}>Filters</Button>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={title}
-                                sx={{ width: 200 }}
-                                onChange={(e) => handleChange(e)}
-                            >
-                                {/* {productFilter.map((prod, index) => (
-                                    <MenuItem key={index} value={prod}>{prod}</MenuItem>
-                                ))} */}
-                            </Select>
-                        </Box>
-                    </FormControl>
-                </Box>
+                <Container style={{ marginTop: 90, display: "flex", justifyContent: 'center' }}>
+                    <SearchBar eventListener={handleChange} />
+                </Container>
                 {loading}
                 <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
-                    {productData.map(prod => (
+                    {filteredData.map(prod => (
                         <ProductCard key={prod.id+prod.user.name} prod={prod}/>
                     ))}
                 </Container>
@@ -110,6 +80,6 @@ const SingleCategory = () => {
 }
 
 
-export default SingleCategory
+export default Products
 
     //         

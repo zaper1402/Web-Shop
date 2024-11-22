@@ -1,6 +1,6 @@
 import './Desktop.css'
 import React, { useContext, useEffect, useState } from 'react'
-import { AiOutlineHeart, AiOutlineShoppingCart, AiFillCloseCircle } from 'react-icons/ai'
+import { AiOutlineHeart, AiOutlineShoppingCart, AiFillCloseCircle, AiFillAmazonSquare, AiOutlineCheckSquare } from 'react-icons/ai'
 import { CgProfile } from 'react-icons/cg'
 import { FiLogOut } from 'react-icons/fi'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
@@ -37,11 +37,6 @@ const DesktopNavigation = () => {
                 <span className='nav-icon-span'>  Home</span>
               </NavLink>
             </li>
-            {/* <li className="nav-links">
-              <NavLink to='/contact'>
-                <span className='nav-icon-span'>  Contact Us</span>
-              </NavLink>
-            </li> */}
 
             <li className="nav-links">
               <Tooltip title='Cart'>
@@ -52,8 +47,8 @@ const DesktopNavigation = () => {
             </li>
             <li className="nav-links">
               <Tooltip title='Wishlist'>
-                <NavLink to="/wishlist">
-                  <span className='nav-icon-span'>Wishlist  <Badge badgeContent={setProceed ? wishlistData.length : 0}> <AiOutlineHeart className='nav-icon' /></Badge></span>
+                <NavLink to="/add-items">
+                  <span className='nav-icon-span'>Add Items  <Badge badgeContent={setProceed ? wishlistData.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
                 </NavLink>
               </Tooltip>
             </li>
