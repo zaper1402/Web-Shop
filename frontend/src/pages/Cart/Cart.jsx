@@ -20,6 +20,7 @@ import './Cart.css'
 import OrderSummary from './OrderSummary';
 import { EmptyCart } from '../../assets/Image';
 import { Slide } from "@mui/material";
+import { baseUrl,  orderUrl } from '../../Constants/urls'
 
 
 
@@ -28,13 +29,12 @@ const Cart = () => {
     const [total, setTotal] = useState(0)
     const [openAlert, setOpenAlert] = useState(false);
     const [previousOrder, setPreviousOrder] = useState([]);
-    let shippingCoast = 100
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const navigate = useNavigate()
     let authToken = localStorage.getItem('Authorization')
     let setProceed = authToken ? true : false
-
 
     useEffect(() => {
         if (setProceed) {
@@ -50,7 +50,7 @@ const Cart = () => {
 
     useEffect(() => {
         if (setProceed) {
-            setTotal(cart.reduce((acc, curr) => (acc + ((curr.productId?.price * curr.quantity) + shippingCoast)), 0))
+            setTotal(cart.reduce((acc, curr) => (acc + ((curr.product?.price * curr.quantity))), 0))
         }
 
     }, [cart])
@@ -87,13 +87,7 @@ const Cart = () => {
     const removeFromCart = async (product) => {
         if (setProceed) {
             try {
-                const response = await axios.delete(`${process.env.REACT_APP_DELETE_CART}/${product._id}`, {
-                    headers: {
-                        'Authorization': authToken
-                    }
-                })
-                toast.success("Removed From Cart", { autoClose: 500, theme: 'colored' })
-                setCart(cart.filter(c => c.productId._id !== product.productId._id))
+                setCart(cart.filter(c => c.id !== product.id))
             } catch (error) {
                 toast.error("Something went wrong", { autoClose: 500, theme: 'colored' })
 
@@ -105,8 +99,22 @@ const Cart = () => {
             toast.error("Please add items in cart to proceed", { autoClose: 500, theme: 'colored' })
         }
         else {
-            sessionStorage.setItem('totalAmount', total)
-            navigate('/checkout')
+            try {
+                setIsLoading(true)
+                console.log("placing order "); 
+                const { data } = await axios.post(`${baseUrl}${orderUrl}`, cart,
+                    {
+                        headers: {
+                            'Authorization': localStorage.getItem('Authorization')
+                        }
+                    }
+                );
+                setIsLoading(false)
+                console.log(data);
+                toast.error("order placed", { autoClose: 500, theme: 'colored' })
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -132,7 +140,7 @@ const Cart = () => {
                         {
                             cart.length > 0 &&
                             cart.map(product =>
-                                <CartCard product={product} removeFromCart={removeFromCart} key={product._id} />
+                                <CartCard product={product} removeFromCart={removeFromCart} key={product.id} />
 
                             )}
                     </Box>
@@ -140,7 +148,7 @@ const Cart = () => {
                     {
                         cart.length > 0 &&
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <OrderSummary proceedToCheckout={proceedToCheckout} total={total} shippingCoast={shippingCoast} />
+                            <OrderSummary proceedToCheckout={proceedToCheckout} total={total} />
                         </Box>
                     }
 

@@ -29,7 +29,7 @@ const CartCard = ({ product, removeFromCart }) => {
                     >
                         {product.quantity && <Button>  <Typography variant='body2' color='black'>  Quantity {' ' + product.quantity} </Typography></Button>}
                         <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
-                            ₹{product?.productId?.price}
+                            ₹{product?.product?.price}
                         </Typography>
                     </Box>
                 </CardContent>

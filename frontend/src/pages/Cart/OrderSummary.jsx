@@ -2,7 +2,7 @@ import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from '@
 import React from 'react'
 import { IoBagCheckOutline } from 'react-icons/io5'
 
-const OrderSummary = ({ proceedToCheckout, total, shippingCoast }) => {
+const OrderSummary = ({ proceedToCheckout, total }) => {
     return (
         <Card
             sx={{ width: { xs: 450, sm: 550, md: 550, lg: 700 } }}
@@ -19,22 +19,6 @@ const OrderSummary = ({ proceedToCheckout, total, shippingCoast }) => {
                     <hr />
                 </Typography>
                 <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }} >
-                        <Typography variant="body1" component="div" color='primary'>
-                            SubTotal
-                        </Typography>
-                        <Typography variant="h6" component="div" color='primary'>
-                            ₹{total - shippingCoast}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }} >
-                        <Typography variant="body1" component="div" color='primary'>
-                            Shipping
-                        </Typography>
-                        <Typography variant="h6" component="div" color='primary'>
-                            ₹{shippingCoast}
-                        </Typography>
-                    </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
                         <Typography variant="body1" component="div" color='primary'>
                             Total

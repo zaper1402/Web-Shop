@@ -68,22 +68,6 @@ const SingleCategory = () => {
         setFilterOption(e.target.value.split(" ").join("").toLowerCase())
         setTitle(e.target.value)
     }
-    // pricelowtohigh 
-    // pricehightolow
-    // highrated
-    // lowrated
-  
-    // const getData = async () => {
-    //     setIsLoading(true)
-    //     const filter = filterOption.toLowerCase()
-    //     const { data } = await axios.post(baseUrl + allInventoryUrl, { userType: cat, userCategory: filter })
-    //     console.log(data);
-    //     setProductData(data)
-    //     setIsLoading(false)
-    // }
-    // useEffect(() => {
-    //     getData()
-    // }, [filterOption])
 
     const loading = isLoading ?
         (
@@ -117,7 +101,7 @@ const SingleCategory = () => {
                 {loading}
                 <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
                     {productData.map(prod => (
-                        <ProductCard key={prod.id+prod.user.name} prod={prod.product} quantity={prod.quantity}/>
+                        <ProductCard key={prod.id+prod.user.name} prod={prod}/>
                     ))}
                 </Container>
             </Container >

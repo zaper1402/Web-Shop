@@ -5,7 +5,7 @@ import {baseUrl, allProductsUrl,allInventoryUrl} from '../Constants/urls'
 
 const getCart = async (setProceed, setCart, authToken) => {
     if (setProceed) {
-        const { data } = await axios.get(baseUrl + allInventoryUrl,
+        const { data } = await axios.get(baseUrl + productUrl,
             {
                 headers: {
                     'Authorization': authToken

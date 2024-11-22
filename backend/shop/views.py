@@ -155,32 +155,34 @@ def add_inventory(request):
 def place_order(request):
     if request.method == 'POST':
         body = json.loads(request.body)
-        user_id = body.get('user_id')
-        seller_id = body.get('seller_id')
-        product_id = body.get('product_id')
-        quantity = body.get('quantity')
-        inventoryItem = None
-        user = None
+        # body is a json arra
+        inventoryItemList = []
+        if isinstance(body, list):
+            for item in body:
+                print(item)
+                id = item.get('id')
+                quantity = item.get('quantity')
+                inventoryItem = None
+                user = None
+                try:
+                    inventoryItem = Inventory.objects.get(id = id)
+                except Product.DoesNotExist:
+                    return JsonResponse({'error': 'Product not found'}, status=404)
+                
+                total = inventoryItem.product.price * int(quantity)
+                order = Order(inventoryItem=inventoryItem, user=user, quantity=quantity, total=total)
+                inventoryItem.quantity -= int(quantity)
+                inventoryItemList.append(inventoryItem)
+                
+        else:
+            return JsonResponse({'error': 'Invalid request'},status=400)
         try:
-            inventoryItem = Inventory.objects.get(user_id=seller_id, product_id=product_id)
-        except Product.DoesNotExist:
-            return JsonResponse({'error': 'Product not found'}, status=404)
-        try:
-            user = User.objects.get(id=seller_id)
-        except User.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-
-        total = inventoryItem.product.price * int(quantity)
-        order = Order(inventoryItem=inventoryItem, user=user, quantity=quantity, total=total)
-        try:
-            order.save()
-            inventoryItem.quantity -= int(quantity)
-            inventoryItem.save()
+            # ordser.save()
+            for item in inventoryItemList:
+                item.save()
+                return JsonResponse({'message': 'Order placed successfully'})
         except Exception as e:
-            inventoryItem.quantity += int(quantity)
-            order.delete()
             return JsonResponse({'error': 'Failed to place order'}, status=500)
-        return JsonResponse({'message': 'Order placed successfully'})
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
     
@@ -208,14 +210,16 @@ def populate_db(request):
         users.append(user)
 
     # For the first 3 users, add 10 products each to their inventory
+    count = 1
     for user in users[:3]:
         for j in range(1, 11):
             product = Product.objects.create(
-                name=f'Product {j}',
-                description='Sample description',
-                price=10.0 * j,
+                name=f'Product {count}',
+                description=f'Sample description {count}',
+                price=(10.0 * j)%7,
                 image='path/to/default/image.jpg'  # Update with a valid image path
             )
+            count += 1
             Inventory.objects.create(
                 product=product,
                 quantity=10,
