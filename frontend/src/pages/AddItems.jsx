@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, Container } from '@mui/material';
+import { Button, Typography, Container, Grid, InputAdornment, TextField  } from '@mui/material';
 import SearchBar from '../components/SearchBar/SearchBar';
 import Loading from '../components/loading/Loading';
 import { baseUrl, get_inventory ,add_inventoryUrl } from '../Constants/urls';
@@ -110,60 +110,84 @@ const AddItems = () => {
 
     return (
         <div>
-            <Button variant='contained' className='nav-icon-span' sx={{ marginBottom: 1 }} onClick={() => setShowForm(!showForm)} >
+            <Button variant='contained' className='nav-icon-span' sx={{ marginBottom: 1, marginInlineStart: 10}} onClick={() => setShowForm(!showForm)} >
                       <Typography variant='button'> Add Product</Typography>
             </Button>
+            
             {showForm && (
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label>Name:</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={newProduct.name}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Price:</label>
-                        <input
-                            type="number"
-                            name="price"
-                            value={newProduct.price}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Description:</label>
-                        <textarea
-                            name="description"
-                            value={newProduct.description}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Image:</label>
-                        <input
-                            type="file"
-                            name="image"
-                            onChange={handleImageChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Quantity:</label>
-                        <input
-                            type="number"
-                            name="quantity"
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <Button type="submit" onClick={addInventory}>Add Product</Button>
-                </form>
+               <Grid container spacing={2} margin={10} width={'400px'}>
+               <Grid item xs={12} sm={6}>
+                 <TextField
+                   name="name"
+                   value={newProduct.name}
+                   onChange={handleInputChange}
+                   required
+                   fullWidth
+                   id="name"
+                   label="Name"
+                 />
+               </Grid>
+               <Grid item xs={12}>
+                 <TextField
+                   required
+                   fullWidth
+                   id="price"
+                   label="price"
+                   name="price"
+                   value={newProduct.price}
+                   onChange={handleInputChange}
+                   inputMode='numeric'
+                   inputProps={{ type: 'number', max: 999, min: 0 }}
+                 />
+               </Grid>
+               <Grid item xs={12}>
+                 <TextField
+                   required
+                   fullWidth
+                   id="description"
+                   label="description"
+                   name="description"
+                   value={newProduct.description}
+                   onChange={handleInputChange}
+                 />
+               </Grid>
+             <Grid item xs={12}>
+                 <input
+                     accept="image/*"
+                     style={{ display: 'none' }}
+                     id="raised-button-file"
+                     type="file"
+                     onChange={handleImageChange}
+                 />
+                 <label htmlFor="raised-button-file">
+                     <Button variant="contained" component="span">
+                         {newProduct.image ? 'Reupload Image' : 'Upload Image'}
+                     </Button>
+                 </label>
+             </Grid>
+               <Grid item xs={12}>
+                 <TextField
+                   required
+                   fullWidth
+                   name="quantity"
+                   label="quantity"
+                   id="quantity"
+                   value={newProduct.quantity}
+                   onChange={handleInputChange}
+                   inputProps={{ type: 'number', max: 10, min: 0 }}
+                 />
+               </Grid>
+             <Grid item xs={12}>
+                 <Button
+                     type="submit"
+                     variant="contained"
+                     color="primary"
+                     onClick={addInventory}
+                 >
+                     Submit
+                 </Button>
+             </Grid>
+             </Grid>
             )}
             <ul>
                 <Container maxWidth='xl' style={{ marginTop: 90, display: 'flex', justifyContent: "center", flexDirection: "column" }}>
@@ -173,7 +197,7 @@ const AddItems = () => {
                     {loading}
                     <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
                         {filteredData.map(prod => (
-                            <ProductCard key={prod.id+prod.user.name} prod={prod}/>
+                            <ProductCard key={prod.id+prod.user.name} prod={prod} isUserProduct={true}/>
                         ))}
                     </Container>
                 </Container >

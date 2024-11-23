@@ -5,7 +5,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { toast } from 'react-toastify'
 
 
-export default function ProductCard({ prod}) {
+export default function ProductCard({ prod, isUserProduct}) {
     const product = prod.product
     const quantity = prod.quantity
     let authToken = localStorage.getItem('Authorization')
@@ -75,7 +75,7 @@ export default function ProductCard({ prod}) {
             <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color="primary">
                 {quantity} in stock
             </Typography>
-            <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button>
+            {!isUserProduct && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
         </Card >
     );
 }

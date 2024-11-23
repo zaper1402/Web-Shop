@@ -94,6 +94,11 @@ const Cart = () => {
             }
         }
     }
+
+    const clearCart = () => {
+        setCart([])
+    }
+
     const proceedToCheckout = async () => {
         if (cart.length <= 0) {
             toast.error("Please add items in cart to proceed", { autoClose: 500, theme: 'colored' })
@@ -111,7 +116,8 @@ const Cart = () => {
                 );
                 setIsLoading(false)
                 console.log(data);
-                toast.error("order placed", { autoClose: 500, theme: 'colored' })
+                clearCart()
+                toast.success("order placed", { autoClose: 500, theme: 'colored' })
             } catch (error) {
                 console.log(error);
             }
