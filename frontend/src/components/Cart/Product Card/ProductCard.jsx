@@ -12,6 +12,7 @@ export default function ProductCard({ prod}) {
     let setProceed = authToken ? true : false
     const { cart, setCart} = useContext(ContextFunction)
     const [productQuantity, setProductQuantity] = useState(1)
+
     const addToCart = async (product) => {
         if (setProceed) {
             try {
@@ -63,18 +64,17 @@ export default function ProductCard({ prod}) {
             </CardActionArea>
             <CardActions style={{ display: "flex", justifyContent: "space-between", width: '100%' }}>
                 <Typography variant="h6" color="primary">
-                    ₹{product.price}
-                </Typography>
-                <Typography >
-                    <Rating precision={0.5} name="read-only" value={product.rating} readOnly />
+                    €{product.price}
                 </Typography>
                 <ButtonGroup variant="outlined" aria-label="outlined button group">
                     <Button onClick={decreaseQuantity}>-</Button>
                     <Button>{productQuantity}</Button>
                     <Button onClick={increaseQuantity}>+</Button>
                 </ButtonGroup>
-
             </CardActions>
+            <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color="primary">
+                {quantity} in stock
+            </Typography>
             <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button>
         </Card >
     );

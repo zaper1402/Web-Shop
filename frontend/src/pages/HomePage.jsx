@@ -13,18 +13,6 @@ const HomePage = () => {
         // getCart()
         window.scroll(0, 0)
     }, [])
-    const getCart = async () => {
-        if (authToken !== null) {
-            const { data } = await axios.get(`${process.env.REACT_APP_GET_CART}`,
-                {
-                    headers: {
-                        'Authorization': authToken
-                    }
-                })
-            setCart(data);
-        }
-
-    }
 
     return (
         <>

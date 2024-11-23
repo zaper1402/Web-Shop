@@ -9,7 +9,9 @@ import DesktopNav from './Navigation/DesktopNavigation'
 import Login from './Auth/Login/Login'
 import Register from './Auth/Register/Register'
 import { Flip, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {useNavigate} from 'react-router-dom'
+import AddItems from './pages/AddItems'
 
 
 
@@ -28,14 +30,15 @@ function App() {
 
   return (
     <>
-      <ToastContainer toastClassName='toastContainerBox' transition={Flip} position='top-center' />
-      <h1>Welcome to App Page</h1>
+      <ToastContainer toastClassName="toastContainerBox" transition={Flip} position="top-right" />
       <DesktopNav />
+      <div className='margin'></div>
       <Routes>
         <Route path="/" index element={<Homepage />} />
         <Route path="/login" element={< Login />} />
         <Route path='/register' element={<Register />} />
         <Route path="/cart" index element={<Cart />} />
+        <Route path="/add-items" element={<AddItems />} />
       </Routes>
     </>
 

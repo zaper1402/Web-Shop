@@ -34,11 +34,11 @@ def signup(request):
 
         # Create and save the new user
         user = User(name=name, email=email, password=hashed_password)
-        user.save()
+        user_id = user.save()
         token = str(uuid.uuid4())
         request.session['auth_token'] = token
         print("auth" + request.session['auth_token'])
-        return JsonResponse({'message': 'User created successfully', 'token': token})
+        return JsonResponse({'message': 'User created successfully', 'token': token, 'user_id': user_id})
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
 
@@ -55,7 +55,7 @@ def login(request):
                 token = str(uuid.uuid4())
                 request.session['auth_token'] = token
                 print("auth" + request.session['auth_token'])
-                return JsonResponse({'message': 'Login successful', 'user': user.name, 'token': token})
+                return JsonResponse({'message': 'Login successful', 'user': user.name, 'token': token, 'user_id': user.id})
             else:
                 return JsonResponse({'error': 'Invalid password'}, status=401)
         except User.DoesNotExist:
@@ -90,6 +90,7 @@ def get_products(request):
     return JsonResponse(data, safe=False)
 
 #get inventory
+@csrf_exempt
 def get_inventory(request):
     inventory = Inventory.objects.all()
     data = []
@@ -103,6 +104,27 @@ def get_inventory(request):
             'quantity': item.quantity
         })
     return JsonResponse(data, safe=False)
+
+def get_inventory_by_id(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        print(user_id)
+        inventory = None
+        try:
+            inventory = Inventory.objects.filter(user_id=user_id)
+        except Inventory.DoesNotExist:
+            return JsonResponse({'error': 'Inventory not found'}, status=404)
+        data = []
+        for item in inventory:
+            product_data = model_to_dict(item.product, exclude=['image'])
+            product_data['image'] = item.product.image.url if item.product.image else ''
+            data.append({
+                'id': item.id,
+                'user': model_to_dict(item.user, exclude=['password']),
+                'product': product_data,
+                'quantity': item.quantity
+            })
+        return JsonResponse(data, safe=False)
 
 
 # Add to inventory
@@ -144,7 +166,7 @@ def add_inventory(request):
                 inventory.save()
             else:
                 return JsonResponse({'error': 'Product not created'}, status=404)
-        return JsonResponse({'message': 'Inventory added successfully'})
+        return JsonResponse({'message': 'Inventory added successfully','data': model_to_dict(inventory)}, status=201)
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
     

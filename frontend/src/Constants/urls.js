@@ -6,5 +6,6 @@ const allInventoryUrl = "/shop/inventory/"
 const add_inventoryUrl = "/shop/inventory/add/"
 const orderUrl = "/shop/order/"
 const populate_db = "/shop/populate_db/"
+const get_inventory = "/shop/get-inventory/"
 
-export { baseUrl, registerUrl, loginUrl, allProductsUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db }
+export { baseUrl, registerUrl, loginUrl, allProductsUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory }

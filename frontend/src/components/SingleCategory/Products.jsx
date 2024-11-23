@@ -38,6 +38,7 @@ const Products = () => {
             setIsLoading(false)
             console.log(data);
             setProductData(data)
+            setFilteredData(data)
 
         } catch (error) {
             console.log(error);

@@ -24,7 +24,7 @@ const OrderSummary = ({ proceedToCheckout, total }) => {
                             Total
                         </Typography>
                         <Typography variant="h6" component="div" color='primary'>
-                            ₹{total}
+                            €{total}
                         </Typography>
                     </Box>
                 </Grid>

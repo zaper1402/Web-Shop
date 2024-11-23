@@ -58,6 +58,7 @@ const Login = () => {
         if (token) {
           toast.success("Login Successfully", { autoClose: 500, theme: 'colored' })
           localStorage.setItem('Authorization', receive.authToken)
+          localStorage.setItem('user_id', receive.user_id)
           navigate('/')
         }
         else{
@@ -125,10 +126,6 @@ const Login = () => {
             autoComplete="current-password"
 
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth
@@ -138,11 +135,6 @@ const Login = () => {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link to="/forgotpassword" variant="body2" style={{ color: '#1976d2' }}>
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
               <Link to="/register" variant="body2" >
                 Don't have an account?<span style={{ color: '#1976d2' }}> Sign Up</span>

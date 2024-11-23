@@ -7,18 +7,17 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Badge, Button, Dialog, DialogActions, DialogContent, Menu, MenuItem, Slide, Tooltip, Typography } from '@mui/material';
 import { ContextFunction } from '../Context/Context';
 import { toast } from 'react-toastify';
-import { getCart, getWishList, handleLogOut, handleClickOpen, handleClose } from '../Constants/Constant'
+import { getCart, handleLogOut, handleClickOpen, handleClose } from '../Constants/Constant'
 
 const DesktopNavigation = () => {
 
-  const { cart, setCart, wishlistData, setWishlistData } = useContext(ContextFunction)
+  const { cart, setCart} = useContext(ContextFunction)
   const [openAlert, setOpenAlert] = useState(false);
   const navigate = useNavigate()
   let authToken = localStorage.getItem('Authorization');
   let setProceed = authToken !== null ? true : false
   useEffect(() => {
     getCart(setProceed, setCart, authToken)
-    // getWishList(setProceed, setWishlistData, authToken)
   }, [])
 
 
@@ -48,7 +47,7 @@ const DesktopNavigation = () => {
             <li className="nav-links">
               <Tooltip title='Wishlist'>
                 <NavLink to="/add-items">
-                  <span className='nav-icon-span'>Add Items  <Badge badgeContent={setProceed ? wishlistData.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
+                  <span className='nav-icon-span'>Add Items  <Badge badgeContent={setProceed ? cart.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
                 </NavLink>
               </Tooltip>
             </li>
@@ -56,13 +55,6 @@ const DesktopNavigation = () => {
             {
               setProceed ?
                 <>
-                  <li className="nav-links">
-                    <Tooltip title='Profile'>
-                      <NavLink to='/update'>
-                        <span className='nav-icon-span'>  <CgProfile style={{ fontSize: 29, marginTop: 7,marginRight:10 }} /></span>
-                      </NavLink>
-                    </Tooltip>
-                  </li>
                   <li style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }} onClick={() => handleClickOpen(setOpenAlert)}>
                     <Button variant='contained' className='nav-icon-span' sx={{ marginBottom: 1 }} endIcon={<FiLogOut />}>
                       <Typography variant='button'> Logout</Typography>

@@ -14,17 +14,7 @@ const getCart = async (setProceed, setCart, authToken) => {
         setCart(data);
     }
 }
-const getWishList = async (setProceed, setWishlistData, authToken) => {
-    if (setProceed) {
-        const { data } = await axios.get(`${process.env.REACT_APP_GET_WISHLIST}`,
-            {
-                headers: {
-                    'Authorization': authToken
-                }
-            })
-        setWishlistData(data)
-    }
-}
+
 const handleLogOut = (setProceed, toast, navigate, setOpenAlert) => {
     if (setProceed) {
         localStorage.removeItem('Authorization')
@@ -81,4 +71,4 @@ const getSingleProduct = async (setProduct, id, setLoading) => {
 
 
 
-export { getCart, getWishList, handleClickOpen, handleClose, handleLogOut, getAllProducts, getSingleProduct }
+export { getCart, handleClickOpen, handleClose, handleLogOut, getAllProducts, getSingleProduct }

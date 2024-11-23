@@ -12,4 +12,5 @@ urlpatterns = [
     path('order/', views.place_order, name='order'),
     path('deleteAll/', views.clear_db, name='deleteAll'),
     path('populate/', views.populate_db, name='populate'),
+    path('get-inventory/', views.get_inventory_by_id, name='get-inventory'),
 ]
