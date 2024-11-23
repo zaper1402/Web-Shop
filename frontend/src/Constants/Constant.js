@@ -1,17 +1,17 @@
 import { Slide } from "@mui/material";
 import { forwardRef } from "react";
 import axios from 'axios';
-import {baseUrl, allProductsUrl,allInventoryUrl} from '../Constants/urls'
+import {baseUrl,allInventoryUrl, get_inventory} from '../Constants/urls'
 
 const getCart = async (setProceed, setCart, authToken) => {
     if (setProceed) {
-        const { data } = await axios.get(baseUrl + productUrl,
-            {
-                headers: {
-                    'Authorization': authToken
-                }
-            })
-        setCart(data);
+        // const { data } = await axios.get(baseUrl + productUrl,
+        //     {
+        //         headers: {
+        //             'Authorization': authToken
+        //         }
+        //     })
+        // setCart(data);
     }
 }
 
@@ -44,12 +44,20 @@ const getAllInventory = async (setData) => {
     }
 }
 
-const getAllProducts = async (setData) => {
+const getUserProducts = async (setProceed, setUserInventory) => {
     try {
-        const { data } = await axios.get(baseUrl + allProductsUrl);
-        setData(data)
-
-
+        if (!setProceed) {
+            return
+        }
+        const { data } = await axios.get(`${baseUrl}${get_inventory}?user_id=${localStorage.getItem('user_id')}`, 
+            {
+                headers: {
+                    'Authorization': localStorage.getItem('Authorization'),
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        setUserInventory(data)
     } catch (error) {
         console.log(error);
     }
@@ -71,4 +79,4 @@ const getSingleProduct = async (setProduct, id, setLoading) => {
 
 
 
-export { getCart, handleClickOpen, handleClose, handleLogOut, getAllProducts, getSingleProduct }
+export { getCart, handleClickOpen, handleClose, handleLogOut, getSingleProduct, getAllInventory, getUserProducts }

@@ -62,9 +62,11 @@ const Register = () => {
           }
         });
         const receive = await sendAuth.data
-        if (receive.success === true) {
+        if (receive.token != null && receive.user_id != null) {
           toast.success("Registered Successfully", { autoClose: 500, theme: 'colored' })
+          console.log(`User Id recieved: ${receive.user_id}`);
           localStorage.setItem('Authorization', receive.authToken)
+          localStorage.setItem('user_id', receive.user_id)
           navigate('/')
           console.log(receive);
         }

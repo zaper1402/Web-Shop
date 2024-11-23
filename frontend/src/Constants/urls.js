@@ -1,11 +1,11 @@
 const baseUrl = "http://127.0.0.1:8000"
 const registerUrl = "/shop/signup/"
 const loginUrl = "/shop/login/"
-const allProductsUrl = "/shop/products/"
+// const allProductsUrl = "/shop/products/"
 const allInventoryUrl = "/shop/inventory/"
 const add_inventoryUrl = "/shop/inventory/add/"
 const orderUrl = "/shop/order/"
-const populate_db = "/shop/populate_db/"
+const populate_db = "/shop/populate/"
 const get_inventory = "/shop/get-inventory/"
 
-export { baseUrl, registerUrl, loginUrl, allProductsUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory }
+export { baseUrl, registerUrl, loginUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory }

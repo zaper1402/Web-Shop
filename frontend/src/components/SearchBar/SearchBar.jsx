@@ -6,15 +6,14 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { Link } from "react-router-dom";
-import { getAllProducts } from "../../Constants/Constant";
 const SearchBar = ({eventListener}) => {
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        getAllProducts(setData);
-    }, [])
+    // useEffect(() => {
+    //     getAllProducts(setData);
+    // }, [])
 
     const handleSearch = event => {
         let value = event.target.value;

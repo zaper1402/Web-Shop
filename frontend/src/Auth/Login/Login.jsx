@@ -57,6 +57,7 @@ const Login = () => {
         const token = resp.get('token')
         if (token) {
           toast.success("Login Successfully", { autoClose: 500, theme: 'colored' })
+          console.log(`User Id recieved: ${receive.user_id}`);
           localStorage.setItem('Authorization', receive.authToken)
           localStorage.setItem('user_id', receive.user_id)
           navigate('/')

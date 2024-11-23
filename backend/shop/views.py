@@ -34,7 +34,8 @@ def signup(request):
 
         # Create and save the new user
         user = User(name=name, email=email, password=hashed_password)
-        user_id = user.save()
+        user.save()
+        user_id = user.id
         token = str(uuid.uuid4())
         request.session['auth_token'] = token
         print("auth" + request.session['auth_token'])
@@ -92,7 +93,9 @@ def get_products(request):
 #get inventory
 @csrf_exempt
 def get_inventory(request):
-    inventory = Inventory.objects.all()
+    jdata = json.loads(request.body)
+    user_id = jdata.get('user_id')
+    inventory = Inventory.objects.all().exclude(user_id=user_id)
     data = []
     for item in inventory:
         product_data = model_to_dict(item.product, exclude=['image'])

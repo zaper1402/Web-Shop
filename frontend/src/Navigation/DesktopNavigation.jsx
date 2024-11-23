@@ -1,23 +1,25 @@
 import './Desktop.css'
 import React, { useContext, useEffect, useState } from 'react'
-import { AiOutlineHeart, AiOutlineShoppingCart, AiFillCloseCircle, AiFillAmazonSquare, AiOutlineCheckSquare } from 'react-icons/ai'
+import { AiOutlineShoppingCart, AiFillCloseCircle, AiOutlineCheckSquare } from 'react-icons/ai'
 import { CgProfile } from 'react-icons/cg'
 import { FiLogOut } from 'react-icons/fi'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Badge, Button, Dialog, DialogActions, DialogContent, Menu, MenuItem, Slide, Tooltip, Typography } from '@mui/material';
 import { ContextFunction } from '../Context/Context';
 import { toast } from 'react-toastify';
-import { getCart, handleLogOut, handleClickOpen, handleClose } from '../Constants/Constant'
+import { getCart, handleLogOut, handleClickOpen, handleClose, getUserProducts } from '../Constants/Constant'
 
 const DesktopNavigation = () => {
 
-  const { cart, setCart} = useContext(ContextFunction)
+  const { cart, setCart, userInventory, setUserInventory} = useContext(ContextFunction)
   const [openAlert, setOpenAlert] = useState(false);
   const navigate = useNavigate()
   let authToken = localStorage.getItem('Authorization');
   let setProceed = authToken !== null ? true : false
   useEffect(() => {
+    setCart([])
     getCart(setProceed, setCart, authToken)
+    getUserProducts(setProceed,setUserInventory)
   }, [])
 
 
@@ -47,7 +49,7 @@ const DesktopNavigation = () => {
             <li className="nav-links">
               <Tooltip title='Wishlist'>
                 <NavLink to="/add-items">
-                  <span className='nav-icon-span'>Add Items  <Badge badgeContent={setProceed ? cart.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
+                  <span className='nav-icon-span'>Add Items  <Badge badgeContent={setProceed ? userInventory.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
                 </NavLink>
               </Tooltip>
             </li>

@@ -2,7 +2,21 @@
 Name : Ashir Kulshreshtha
 Email : ashir.kulshreshtha@abo.fi
 
-## Requirements Implmented
+## Requirements Implemented
+
+
+## How to run the project 
+### Backend
+`cd backend`
+`.\venv\Scripts\activate.bat`
+`pip install -r requirements.txt`
+`python manage.py runserver`
+
+### Frontend
+`cd frontend`
+`npm install`
+`npm run dev`
+
 
 1) Project Folder
     - Readme.MD

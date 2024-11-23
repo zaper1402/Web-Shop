@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Typography, Container, Grid, InputAdornment, TextField  } from '@mui/material';
+import React, { useState, useEffect,useContext } from 'react';
+import { Button, Typography, Container, Grid, TextField  } from '@mui/material';
 import SearchBar from '../components/SearchBar/SearchBar';
 import Loading from '../components/loading/Loading';
 import { baseUrl, get_inventory ,add_inventoryUrl } from '../Constants/urls';
 import axios from 'axios'
+import { ContextFunction } from '../Context/Context';
 import ProductCard from '../components/Cart/Product Card/ProductCard';
 import { toast } from 'react-toastify'
 
 
 const AddItems = () => {
-    const [products, setProducts] = useState([]);
+    const {userInventory, setUserInventory} = useContext(ContextFunction)
     const [filteredData, setFilteredData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [showForm, setShowForm] = useState(false);
@@ -35,12 +36,6 @@ const AddItems = () => {
         setNewProduct({ ...newProduct, image: e.target.files[0] });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setProducts([...products, newProduct]);
-        setNewProduct({ name: '', price: '', description: '', image: null });
-        setShowForm(false);
-    };
 
     const getUserProducts = async () => {
         try {
@@ -55,7 +50,7 @@ const AddItems = () => {
             );
             setIsLoading(false)
             console.log(data);
-            setProducts(data)
+            setUserInventory(data)
             setFilteredData(data)
 
         } catch (error) {
@@ -82,7 +77,7 @@ const AddItems = () => {
                 }
             });
             let newproduct = data.data[0]
-            setProducts([...products, newproduct]);
+            setUserInventory([...userInventory, newproduct]);
             setFilteredData([...filteredData, newproduct]);
             clearForm();
             toast.success('Product added successfully',{ autoClose: 500, theme: 'colored' });
