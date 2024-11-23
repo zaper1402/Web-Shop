@@ -35,3 +35,13 @@ Logged in user :
 
 1) API for html of landing page : "/"
 2) API for json resp for shop page : "/shop"
+
+
+Todo
+-> Data added in product 
+-> edit product flow 
+-> edit password
+-> category -> 3categories:onsale,sold,andpurchased.
+-> move purchased item to user
+-> sold items handling
+-> change in price the cart is halted
