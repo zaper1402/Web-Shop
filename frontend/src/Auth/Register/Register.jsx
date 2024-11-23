@@ -13,7 +13,7 @@ import { baseUrl, registerUrl } from '../../Constants/urls'
 
 const Register = () => {
 
-  const [credentials, setCredentials] = useState({ firstName: "", lastName: '', email: "", phoneNumber: '', password: "" })
+  const [credentials, setCredentials] = useState({ name: "", email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -30,28 +30,23 @@ const Register = () => {
   }, [])
   const handleSubmit = async (e) => {
     e.preventDefault()
-    let phoneRegex = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/gm;
     let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     try {
-      if (!credentials.email && !credentials.firstName && !credentials.password && !credentials.phoneNumber && !credentials.lastName) {
+      if (!credentials.email && !credentials.name && !credentials.password) {
         toast.error("All fields are required", { autoClose: 500, theme: 'colored' })
       }
-      else if (credentials.firstName.length < 1 || credentials.lastName.length < 1) {
+      else if (credentials.name.length < 1) {
         toast.error("Please enter valid name", { autoClose: 500, theme: 'colored' })
       }
       else if (emailRegex.test(credentials.email)===false) {
         toast.error("Please enter valid email", { autoClose: 500, theme: 'colored' })
       }
-      else if (phoneRegex.test(credentials.phoneNumber)===false) {
-        toast.error("Please enter a valid phone number", { autoClose: 500, theme: 'colored' })
-        console.log(1);
-      }
       else if (credentials.password.length < 5) {
         toast.error("Please enter password with more than 5 characters", { autoClose: 500, theme: 'colored' })
       }
-      else if (credentials.email && credentials.firstName && credentials.lastName && credentials.phoneNumber && credentials.password) {
+      else if (credentials.email && credentials.name && credentials.password) {
         const formData = new FormData();
-        formData.append('name', credentials.firstName);
+        formData.append('name', credentials.name);
         formData.append('email', credentials.email);
         // formData.append('phoneNumber', credentials.phoneNumber);
         formData.append('password', credentials.password);
@@ -103,29 +98,17 @@ const Register = () => {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
-                  value={credentials.firstName}
+                  name="name"
+                  value={credentials.name}
                   onChange={handleOnChange}
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="name"
+                  label="username"
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  value={credentials.lastName}
-                  onChange={handleOnChange}
-                  autoComplete="family-name"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -139,18 +122,6 @@ const Register = () => {
                   onChange={handleOnChange}
                   autoComplete="email"
 
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Contact Number"
-                  name="phoneNumber"
-                  value={credentials.phoneNumber}
-                  onChange={handleOnChange}
-                  inputMode='numeric'
                 />
               </Grid>
               <Grid item xs={12}>
@@ -173,17 +144,12 @@ const Register = () => {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              onClick={handleSubmit}
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
