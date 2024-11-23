@@ -108,7 +108,6 @@ def get_inventory(request):
 def get_inventory_by_id(request):
     if request.method == 'GET':
         user_id = request.GET.get('user_id')
-        print(user_id)
         inventory = None
         try:
             inventory = Inventory.objects.filter(user_id=user_id)
@@ -166,7 +165,16 @@ def add_inventory(request):
                 inventory.save()
             else:
                 return JsonResponse({'error': 'Product not created'}, status=404)
-        return JsonResponse({'message': 'Inventory added successfully','data': model_to_dict(inventory)}, status=201)
+        product_data = model_to_dict(inventory.product, exclude=['image'])
+        product_data['image'] = inventory.product.image.url if inventory.product.image else ''
+        data = []
+        data.append({
+            'id': inventory.id,
+            'user': model_to_dict(inventory.user, exclude=['password']),
+            'product': product_data,
+            'quantity': inventory.quantity
+        })
+        return JsonResponse({'message': 'Inventory added successfully','data': data}, status=201)
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
     

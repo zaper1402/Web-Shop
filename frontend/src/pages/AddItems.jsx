@@ -5,7 +5,7 @@ import Loading from '../components/loading/Loading';
 import { baseUrl, get_inventory ,add_inventoryUrl } from '../Constants/urls';
 import axios from 'axios'
 import ProductCard from '../components/Cart/Product Card/ProductCard';
-
+import { toast } from 'react-toastify'
 
 
 const AddItems = () => {
@@ -81,14 +81,20 @@ const AddItems = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(data);
-            setProducts([...products, data.data]);
-            setFilteredData([...filteredData, data.data]);
+            let newproduct = data.data[0]
+            setProducts([...products, newproduct]);
+            setFilteredData([...filteredData, newproduct]);
+            clearForm();
+            toast.success('Product added successfully',{ autoClose: 500, theme: 'colored' });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
         }
     };
+
+    const clearForm = () => {
+        setNewProduct({ name: '', price: '', description: '', image: null, quantity: 0 });
+    }
 
     const loading = isLoading ?
         (

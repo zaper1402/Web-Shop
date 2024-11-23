@@ -75,7 +75,7 @@ export default function ProductCard({ prod, isUserProduct}) {
             <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color="primary">
                 {quantity} in stock
             </Typography>
-            {!isUserProduct && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
+            {!  isUserProduct && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
         </Card >
     );
 }
