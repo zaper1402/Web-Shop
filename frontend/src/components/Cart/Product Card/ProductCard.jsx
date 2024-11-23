@@ -50,11 +50,16 @@ export default function ProductCard({ prod, isUserProduct}) {
             setProductQuantity((prev) => prev -1)
         }
     }
+
+    const decodeImage = (image) => {
+        return `data:image/jpg;base64,${image}`;
+    };
+    const imageSrc = React.useMemo(() => decodeImage(product.image), [product.image]);
     return (
         <Card className={styles.main_card}>
             <CardActionArea className={styles.card_action}>
                 <Box className={styles.cart_box}>
-                    <img alt={product.name} src={product.image} loading='lazy' className={styles.cart_img} />
+                    <img alt={product.name} src={imageSrc} loading='lazy' className={styles.cart_img} />
                 </Box>
                 <CardContent>
                     <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>

@@ -8,6 +8,10 @@ from django.forms.models import model_to_dict
 from .models import User, Product,  Inventory, Order
 import logging
 import uuid
+import base64
+from PIL import Image
+import io
+import random
 
 
 
@@ -246,11 +250,21 @@ def populate_db(request):
     count = 1
     for user in users[:3]:
         for j in range(1, 11):
+            # pick files from asset folder to poppuate the image field
+            image_files = [
+                'E:/Web-Shop/backend/shop/assets/img1.jpg',
+                'E:/Web-Shop/backend/shop/assets/img2.jpg',
+                'E:/Web-Shop/backend/shop/assets/img3.jpg',
+                'E:/Web-Shop/backend/shop/assets/img5.jpg',
+                'E:/Web-Shop/backend/shop/assets/img6.jpg',
+            ]
+            image_path = random.choice(image_files)
+            img = decode_image(image_path)
             product = Product.objects.create(
                 name=f'Product {count}',
                 description=f'Sample description {count}',
                 price=(10.0 * j)%7,
-                image='path/to/default/image.jpg'  # Update with a valid image path
+                image= img             
             )
             count += 1
             Inventory.objects.create(
@@ -260,3 +274,13 @@ def populate_db(request):
             )
 
     return JsonResponse({'message': 'Database populated successfully'})
+
+def decode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        image = Image.open(image_file)
+        image = image.convert("RGB")
+        image.thumbnail((300, 300), Image.LANCZOS)
+        buffer = io.BytesIO()
+        image.save(buffer, format="JPEG")
+        encoded_string = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    return encoded_string

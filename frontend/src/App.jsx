@@ -44,7 +44,7 @@ function App() {
             }
         );
         toast.success('Database Populated', {autoClose: 2000, theme: 'colored' })
-    } catch (error) {dd
+    } catch (error) {
         setIsLoading(false)
         console.log(error);
     }
