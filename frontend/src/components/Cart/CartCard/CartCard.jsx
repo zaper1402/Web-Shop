@@ -10,12 +10,17 @@ const CartCard = ({ product, removeFromCart }) => {
         <Card className={styles.main_cart}>
             <Link to={`/Detail/type/${product?.productId?.type}/${product?.productId?._id}`}>
             <CardActionArea className={styles.card_action} >
+                <div style={{ marginTop:'10px', display: "flex", direction:'row', justifyContent: "center" }}>
+                    <Typography gutterBottom variant="h5" sx={{ textAlign: "center" }}>
+                                {product?.product?.name}
+                    </Typography>
+                </div>
                 <Box className={styles.img_box}  >
-                        <img alt={product?.productId?.name} loading='lazy' src={product?.productId?.image} className={styles.img} />
+                        <img alt={product?.product?.name} loading='lazy' src={product?.productId?.image} className={styles.img} />
                 </Box>
                 <CardContent>
                     <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
-                        {product?.productId?.name.length > 20 ? product?.productId?.name.slice(0, 20) + '...' : product?.productId?.name}
+                        {product?.product?.description.length > 20 ? product?.product?.description.slice(0, 20) + '...' : product?.product?.description}
                     </Typography>
                     <Box
                         sx={{

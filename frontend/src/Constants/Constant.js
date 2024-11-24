@@ -1,7 +1,8 @@
 import { Slide } from "@mui/material";
-import { forwardRef } from "react";
+import { useContext } from "react";
 import axios from 'axios';
-import {baseUrl,allInventoryUrl, get_inventory} from '../Constants/urls'
+import {baseUrl,allInventoryUrl, get_inventory, set_cart} from '../Constants/urls'
+import { ContextFunction } from '../Context/Context';
 
 const getCart = async (setProceed, setCart, authToken) => {
     if (setProceed) {
@@ -11,6 +12,7 @@ const getCart = async (setProceed, setCart, authToken) => {
         //             'Authorization': authToken
         //         }
         //     })
+     
         // setCart(data);
     }
 }

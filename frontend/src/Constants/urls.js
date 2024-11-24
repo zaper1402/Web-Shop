@@ -9,5 +9,7 @@ const populate_db = "/shop/populate/"
 const get_inventory = "/shop/get-inventory/"
 const update_product = "/shop/update-product/"
 const update_password = "/shop/update-password/"
+const get_cart = "/shop/get-cart/"
+const set_cart = "/shop/update-cart/"
 
-export { baseUrl, registerUrl, loginUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory,update_product, update_password }
+export { baseUrl, registerUrl, loginUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory,update_product, update_password, get_cart, set_cart }

@@ -40,5 +40,12 @@ class Order(models.Model):
 
     def __str__(self):
         return self.product.name
-
     
+
+# create cart model which have buyer_id, list of inventory_product copy
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    inventory = models.TextField()
+    date_added = models.CharField(max_length=100, default= timezone.now().strftime('%Y-%m-%d %H:%M:%S'))
+    def __str__(self):
+        return self.user.name
