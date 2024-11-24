@@ -7,7 +7,7 @@
     align-items: center;
     flex-direction: column;
     padding: 15px;
-    height: 500px;
+    height: 560px;
     /* border: 2px solid red; */
     /* border: 2px solid blue; */
 }
@@ -34,6 +34,10 @@
     width: 100%;
     object-fit: contain;
     object-position: center;
+}
+
+.cart_sold_out{
+    color: red;
 }
 
 @media screen and (max-width: 960px) {

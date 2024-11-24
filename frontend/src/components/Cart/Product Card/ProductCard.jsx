@@ -1,9 +1,9 @@
-import { Box, Card, CardActionArea, CardActions, Rating, CardContent, Typography, ButtonGroup, Button } from '@mui/material';
+import { Box, Card, CardActionArea, CardActions, Rating, CardContent, Typography, ButtonGroup, Button, CardHeader } from '@mui/material';
 import styles from './ProductCard.module.css'
 import { ContextFunction } from '../../../Context/Context';
 import React, { useEffect, useState, useContext } from 'react'
 import { toast } from 'react-toastify'
-import { baseUrl, update_product} from '../../../Constants/urls';
+import { baseUrl, update_product,set_cart} from '../../../Constants/urls';
 import axios from 'axios';
 
 
@@ -25,17 +25,17 @@ export default function ProductCard({ prod, isUserProduct}) {
                 if (existingProductIndex !== -1) {
                     const updatedCart = [...cart];
                     if (productQuantity > 0) {
-                        updatedCart[existingProductIndex].quantity = productQuantity;
+                        updatedCart[existingProductIndex].quantity += productQuantity;
                     } else {
                         updatedCart.splice(existingProductIndex, 1);
                     }
-                    setCart(updatedCart);
+                    updateCartToServer(updatedCart);
                 } else {
                     if (productQuantity > 0) {
-                      setCart([...cart, { ...prod, quantity: productQuantity }]);
+                        const updatedCart = [...cart, { ...prod, quantity: productQuantity }];
+                        updateCartToServer(updatedCart);
                     }
                 }
-                toast.success("Added To Cart", { autoClose: 500, theme: 'colored' })
             } catch (error) {
                 toast.error(error.response.data.msg, { autoClose: 500, theme: 'colored' })
             }
@@ -64,6 +64,21 @@ export default function ProductCard({ prod, isUserProduct}) {
         }
     }
 
+    const updateCartToServer = async (cart) => {
+        try {
+            const response = await axios.post(`${baseUrl}${set_cart}`, { cart, user_id:localStorage.getItem('user_id') }, {
+                headers: {
+                    'Authorization': authToken
+                }
+            });
+            console.log(`updated cart data: ${response.data}`);
+            setCart(cart)
+            toast.success("Cart updated successfully", { autoClose: 500, theme: 'colored' })
+        } catch (error) {
+            toast.error(`Something went wrong ${error}`, { autoClose: 500, theme: 'colored' })
+        }
+    }
+
     const increaseQuantity = () => {
         if (productQuantity < quantity) {
             setProductQuantity((prev) => prev +1)
@@ -81,6 +96,14 @@ export default function ProductCard({ prod, isUserProduct}) {
     const imageSrc = React.useMemo(() => decodeImage(product.image), [product.image]);
     return (
         <Card className={styles.main_card}>
+            <div style={{ marginTop:'10px', display: "flex", direction:'row', justifyContent: "center" }}>
+                <Typography gutterBottom variant="h5" sx={{ textAlign: "center" }}>
+                            {product.name}
+                </Typography>
+                {quantity===0 && <Typography className={styles.cart_sold_out} variant="h6" sx={{ textAlign: "center" }}>
+                            (Sold Out)
+                </Typography>}
+            </div>
             <CardActionArea className={styles.card_action}>
                 <Box className={styles.cart_box}>
                     <img alt={product.name} src={imageSrc} loading='lazy' className={styles.cart_img} />

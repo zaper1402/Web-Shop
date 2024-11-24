@@ -20,7 +20,7 @@ import './Cart.css'
 import OrderSummary from './OrderSummary';
 import { EmptyCart } from '../../assets/Image';
 import { Slide } from "@mui/material";
-import { baseUrl,  orderUrl } from '../../Constants/urls'
+import { baseUrl,  orderUrl,get_cart, set_cart } from '../../Constants/urls'
 
 
 
@@ -57,13 +57,16 @@ const Cart = () => {
 
     const getCart = async () => {
         if (setProceed) {
-            const { data } = await axios.get(`${process.env.REACT_APP_GET_CART}`,
+            const formData = new FormData();
+            formData.append('user_id', localStorage.getItem('user_id'));
+            const { data } = await axios.get(`${baseUrl}${get_cart}?user_id=${localStorage.getItem('user_id')}`,
                 {
                     headers: {
                         'Authorization': authToken
                     }
                 })
-            setCart(data);
+                console.log(`Get cart:${data}`);
+            setCart(data.inventory);
         }
 
     }
@@ -87,7 +90,7 @@ const Cart = () => {
     const removeFromCart = async (product) => {
         if (setProceed) {
             try {
-                setCart(cart.filter(c => c.id !== product.id))
+                updateCartToServer(cart.filter(item => item.id !== product.id))
             } catch (error) {
                 toast.error("Something went wrong", { autoClose: 500, theme: 'colored' })
 
@@ -95,8 +98,22 @@ const Cart = () => {
         }
     }
 
+    const updateCartToServer = async (cart) => {
+        try {
+            const response = await axios.post(`${baseUrl}${set_cart}`, { cart, user_id:localStorage.getItem('user_id') }, {
+                headers: {
+                    'Authorization': authToken
+                }
+            });
+            console.log(`updated cart data: ${response.data}`);
+            setCart(cart)
+        } catch (error) {
+            toast.error(`Something went wrong ${error}`, { autoClose: 500, theme: 'colored' })
+        }
+    }
+
     const clearCart = () => {
-        setCart([])
+        updateCartToServer([])
     }
 
     const proceedToCheckout = async () => {
@@ -107,10 +124,16 @@ const Cart = () => {
             try {
                 setIsLoading(true)
                 console.log("placing order "); 
+                cart.forEach((product) => {
+                    product.buyer_id = localStorage.getItem('user_id')
+                })
                 const { data } = await axios.post(`${baseUrl}${orderUrl}`, cart,
+                
                     {
                         headers: {
+                            'user_id': localStorage.getItem('userId'),
                             'Authorization': localStorage.getItem('Authorization')
+                            
                         }
                     }
                 );

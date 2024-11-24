@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.auth.hashers import check_password, make_password
 from django.forms.models import model_to_dict
-from .models import User, Product,  Inventory, Order
+from .models import User, Product,  Inventory, Order, Cart
 import logging
 import uuid
 import base64
@@ -61,7 +61,7 @@ def login(request):
                 token = str(uuid.uuid4())
                 request.session['auth_token'] = token
                 print("auth" + request.session['auth_token'])
-                return JsonResponse({'message': 'Login successful', 'user': user.name, 'token': token, 'user_id': user.id})
+                return JsonResponse({'message': 'Login successful', 'user': user.name, 'token': token, 'user_id': user.id, 'email': user.email, password: user.password})
             else:
                 return JsonResponse({'error': 'Invalid password'}, status=401)
         except User.DoesNotExist:
@@ -172,7 +172,6 @@ def add_inventory(request):
             p_name = request.POST.get('name')
             p_description = request.POST.get('description') 
             p_price = request.POST.get('price')
-            print(request.FILES)
             # Handle image file upload
             if 'image' in request.FILES:
                 image_file = request.FILES['image']
@@ -230,7 +229,6 @@ def update_product(request):
         description = jsonData.get('description')
         price = jsonData.get('price')
         product = None
-        print(jsonData)
         try:
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
@@ -246,6 +244,51 @@ def update_product(request):
         return JsonResponse({'message': 'Product updated successfully'})
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
+    
+
+
+def get_cart(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        cart = None
+        try:
+            cart = Cart.objects.get(user=user_id)
+        except Cart.DoesNotExist:
+            return JsonResponse({'error': 'Cart not found'}, status=404)
+        response = {
+            'user': model_to_dict(cart.user, exclude=['password']),
+            'inventory': json.loads(cart.inventory.replace("'", '"'))
+        }
+        return JsonResponse(response, safe=False)
+    else:
+        return JsonResponse({'error': 'Only GET method is allowed'}, status=400)
+    
+
+@csrf_exempt
+def update_cart(request):
+    if request.method == 'POST':
+        jsonData = json.loads(request.body)
+        user_id = jsonData.get('user_id')
+        cart = jsonData.get('cart')
+        cartStr = json.dumps(cart)
+        if not user_id:
+            return JsonResponse({'error': 'User not found'}, status=404)
+        if isinstance(cart, list):
+            oldCart = Cart.objects.get(user=user_id)
+            print(f"Oldcart {oldCart}")
+            if oldCart:
+                print(f"Oldcart {oldCart.inventory}")
+                oldCart.inventory = cartStr
+                oldCart.save()
+            else:
+                user = User.objects.get(id=user_id)
+                newCart = Cart(user=user,inventory=cartStr)
+                newCart.save()
+        else:
+            return JsonResponse({'error': 'Invalid request'}, status=400)
+        return JsonResponse({'message': 'Cart updated successfully'})
+    else:
+        return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
         
     
 
@@ -256,14 +299,20 @@ def place_order(request):
     if request.method == 'POST':
         body = json.loads(request.body)
         # body is a json arra
+        oldInventory = []
         inventoryItemList = []
         if isinstance(body, list):
             for item in body:
-                print(item)
+                print(request.headers)
                 id = item.get('id')
+                buyer_id = item.get('buyer_id')
                 quantity = item.get('quantity')
                 inventoryItem = None
                 user = None
+                try:
+                    user = User.objects.get(id=buyer_id)
+                except User.DoesNotExist:  
+                    return JsonResponse({'error': 'Buyer not found'}, status=404)
                 try:
                     inventoryItem = Inventory.objects.get(id = id)
                 except Product.DoesNotExist:
@@ -272,18 +321,27 @@ def place_order(request):
                     return JsonResponse({'error': 'Not enough stock'}, status=400)
                 
                 total = inventoryItem.product.price * int(quantity)
-                order = Order(inventoryItem=inventoryItem, user=user, quantity=quantity, total=total)
+                order = Order(inventoryItem=inventoryItem, user=user, quantity=quantity, total=total).save()
                 inventoryItem.quantity -= int(quantity)
                 if inventoryItem.quantity == 0:
                         inventoryItem.category = "Sold"
-                inventoryItemList.append(inventoryItem)
+                newItem = Inventory(
+                    product=inventoryItem.product,
+                    quantity=int(quantity),
+                    category="Purchased",
+                    user=user,
+                    date_added=timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+                )
+                oldInventory.append(inventoryItem)
+                inventoryItemList.append(newItem)
                 
         else:
             return JsonResponse({'error': 'Invalid request'},status=400)
         try:
             # ordser.save()
-            for item in inventoryItemList:
+            for item, old_item in zip(inventoryItemList, oldInventory):
                 item.save()
+                old_item.save()
                 return JsonResponse({'message': 'Order placed successfully'})
         except Exception as e:
             return JsonResponse({'error': 'Failed to place order'}, status=500)
@@ -296,6 +354,7 @@ def clear_db(request):
     Inventory.objects.all().delete()
     Product.objects.all().delete()
     User.objects.all().delete()
+    Cart.objects.all().delete()
     return JsonResponse({'message': 'Database cleared successfully'})
 
 
@@ -333,6 +392,7 @@ def populate_db(request):
                 price=(10.0 * j)%7,
                 image= img
             )
+            count += 1
             inventory = Inventory.objects.create(
                 product=product,
                 quantity=10,
