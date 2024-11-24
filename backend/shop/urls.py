@@ -5,6 +5,7 @@ urlpatterns = [
     path('ping/', views.ping),
     path('signup/', views.signup, name='signup'),
     path('login/', views.login, name='login'),
+    path('update-password/', views.update_password, name='update-password'),
     path('products/', views.get_products, name='products'),
     # path('products/<int:id>/', views.get_product, name='product'),
     path('inventory/', views.get_inventory, name='inventory'),

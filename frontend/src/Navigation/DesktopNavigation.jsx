@@ -53,10 +53,16 @@ const DesktopNavigation = () => {
                 </NavLink>
               </Tooltip>
             </li>
-
             {
               setProceed ?
                 <>
+                  <li className="nav-links">
+                    <Tooltip title='Profile'>
+                      <NavLink to='/account'>
+                        <span className='nav-icon-span'>  <CgProfile style={{ fontSize: 29, marginTop: 7,marginRight:10 }} /></span>
+                      </NavLink>
+                    </Tooltip>
+                   </li> 
                   <li style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }} onClick={() => handleClickOpen(setOpenAlert)}>
                     <Button variant='contained' className='nav-icon-span' sx={{ marginBottom: 1 }} endIcon={<FiLogOut />}>
                       <Typography variant='button'> Logout</Typography>

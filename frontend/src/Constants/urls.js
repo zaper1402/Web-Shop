@@ -8,5 +8,6 @@ const orderUrl = "/shop/order/"
 const populate_db = "/shop/populate/"
 const get_inventory = "/shop/get-inventory/"
 const update_product = "/shop/update-product/"
+const update_password = "/shop/update-password/"
 
-export { baseUrl, registerUrl, loginUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory,update_product }
+export { baseUrl, registerUrl, loginUrl, allInventoryUrl, add_inventoryUrl, orderUrl, populate_db, get_inventory,update_product, update_password }

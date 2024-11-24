@@ -16,6 +16,7 @@ import { Button, Typography } from '@mui/material'
 import axios from 'axios'
 import { baseUrl, populate_db } from './Constants/urls'
 import { toast } from 'react-toastify'
+import Account from './pages/Account'
 
 
 
@@ -67,6 +68,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path="/cart" index element={<Cart />} />
         <Route path="/add-items" element={<AddItems />} />
+        <Route path="/account" element={<Account />} />
       </Routes>
     </>
 

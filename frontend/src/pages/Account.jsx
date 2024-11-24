@@ -1,4 +1,4 @@
-import './login.css'
+import '../Auth/Login/Login.css'
 import { Avatar, Button, Checkbox, CssBaseline, FormControlLabel, Grid, InputAdornment, TextField, Typography } from '@mui/material'
 import { Box, Container } from '@mui/system'
 import React, { useEffect } from 'react'
@@ -8,46 +8,36 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { MdLockOutline } from 'react-icons/md'
 import { RiEyeFill, RiEyeOffFill } from 'react-icons/ri'
-import { baseUrl, loginUrl } from '../../Constants/urls'
+import { baseUrl, update_password } from '../Constants/urls'
 
 
 
 
-const Login = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" })
+const Account = () => {
+  const [credentials, setCredentials] = useState({ oldPassword: localStorage.getItem('password') ? localStorage.getItem('password') : '', password: "" })
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  const navigate = useNavigate()
 
   const handleOnChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
-  useEffect(() => {
-    let auth = localStorage.getItem('Authorization');
-    if (auth) {
-      navigate("/")
-    }
-  }, [])
+ 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     try {
-      if (!credentials.email && !credentials.password) {
+      if (!credentials.password) {
         toast.error("All fields are required", { autoClose: 500, theme: 'colored' })
-      }
-      else if (!emailRegex.test(credentials.email)) {
-        toast.error("Please enter a valid email", { autoClose: 500, theme: 'colored' })
       }
       else if (credentials.password.length < 5) {
         toast.error("Please enter valid password", { autoClose: 500, theme: 'colored' })
       }
-      else if (credentials.email && credentials.password) {
+      else if (credentials.password) {
         const formData = new FormData();
-        formData.append('email', credentials.email);
+        formData.append('user_id', localStorage.getItem('user_id'));
         formData.append('password', credentials.password);
-        const sendAuth = await axios.post(baseUrl + loginUrl, formData, { 
+        const sendAuth = await axios.post(baseUrl + update_password, formData, { 
           headers: {
           'Content-Type': 'multipart/form-data'
           }
@@ -56,17 +46,13 @@ const Login = () => {
         const resp = new Map(Object.entries(receive))
         const token = resp.get('token')
         if (token) {
-          toast.success("Login Successfully", { autoClose: 500, theme: 'colored' })
-          console.log(`User Id recieved: ${receive.user_id}`);
-          localStorage.setItem('Authorization', receive.authToken)
-          localStorage.setItem('user_id', receive.user_id)
+          toast.success("Update Successfully", { autoClose: 500, theme: 'colored' })
+          localStorage.setItem('Authorization', receive.token)
           localStorage.setItem('password', credentials.password)
-          navigate('/')
-        }
-        else{
+        } else{
           toast.error("Something went wrong, Please try again", { autoClose: 500, theme: 'colored' })
-          navigate('/')
         }
+        setCredentials({ ...credentials, oldPassword: localStorage.getItem('password'), password: '' })
       }
     }
     catch (error) {
@@ -93,29 +79,33 @@ const Login = () => {
           <MdLockOutline />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Update Password
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
-            required
             fullWidth
-            id="email"
-            label="Email Address"
-            value={credentials.email}
-            name='email'
-            onChange={handleOnChange}
-            autoComplete="email"
-            autoFocus
+            id="oldPassword"
+            label="Old Password"
+            value={credentials.oldPassword}
+            name='oldPassword'
+            clickable={false}
+            focused={false}
+            slotProps={{
+              input: {
+                readOnly: true
+              }
+            }}
           />
           <TextField
             margin="normal"
             required
             fullWidth
+            focused
             value={credentials.password}
             name='password'
             onChange={handleOnChange}
-            label="Password"
+            label="New Password"
             type={showPassword ? "text" : "password"}
             id="password"
             InputProps={{
@@ -134,19 +124,12 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Update Password
           </Button>
-          <Grid container>
-            <Grid item>
-              <Link to="/register" variant="body2" >
-                Don't have an account?<span style={{ color: '#1976d2' }}> Sign Up</span>
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
   )
 }
 
-export default Login
+export default Account

@@ -38,9 +38,9 @@ Logged in user :
 
 
 Todo
--> Data added in product 
--> edit product flow 
--> edit password
+-> Data added in product [Done]
+-> edit product flow [Done]
+-> edit password [Done]
 -> category -> 3categories:onsale,sold,andpurchased.
 -> move purchased item to user
 -> sold items handling

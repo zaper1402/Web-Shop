@@ -68,6 +68,25 @@ def login(request):
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
+    
+@csrf_exempt
+def update_password(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        password = request.POST.get('password')
+        # Hash the password before saving
+        hashed_password = make_password(password)
+        try:
+            user = User.objects.get(id=user_id)
+            user.password = hashed_password
+            user.save()
+            token = str(uuid.uuid4())
+            request.session['auth_token'] = token
+            return JsonResponse({'message': 'Password updated successfully', 'token': token})
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+    else:
+        return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
 
 def protected_view(request):
     token = request.headers.get('Authorization')
@@ -223,6 +242,7 @@ def update_product(request):
         return JsonResponse({'message': 'Product updated successfully'})
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
+        
     
 
     
