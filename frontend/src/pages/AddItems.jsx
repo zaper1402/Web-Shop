@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 
 const AddItems = () => {
     const { userInventory, setUserInventory } = useContext(ContextFunction)
-    const [selectedFilter, setSelectedFilter] = useState('onSale')
+    const [selectedFilter, setSelectedFilter] = useState('')
     const [filteredData, setFilteredData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [showForm, setShowForm] = useState(false);
