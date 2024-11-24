@@ -3,6 +3,8 @@ import styles from './ProductCard.module.css'
 import { ContextFunction } from '../../../Context/Context';
 import React, { useEffect, useState, useContext } from 'react'
 import { toast } from 'react-toastify'
+import { baseUrl, update_product} from '../../../Constants/urls';
+import axios from 'axios';
 
 
 export default function ProductCard({ prod, isUserProduct}) {
@@ -12,6 +14,9 @@ export default function ProductCard({ prod, isUserProduct}) {
     let setProceed = authToken ? true : false
     const { cart, setCart} = useContext(ContextFunction)
     const [productQuantity, setProductQuantity] = useState(1)
+    const [updatedPrice, setUpdatedPrice] = useState(1)
+    const [editProduct, setEditProduct] = useState(false)
+    const [productPrice, setProductPrice] = useState(product.price)
 
     const addToCart = async (product) => {
         if (setProceed) {
@@ -37,6 +42,25 @@ export default function ProductCard({ prod, isUserProduct}) {
         }
         else {
             setOpenAlert(true);
+        }
+    }
+
+    const updateProduct = async () => {
+        try {
+            const response = await axios.post(`${baseUrl}${update_product}`, { 
+                product_id: product.id,
+                price: updatedPrice
+             }, {
+                headers: {
+                    'Authorization': authToken
+                }
+            });
+            const data = response.data;
+            toast.success(data.msg, { autoClose: 500, theme: 'colored' })
+            setProductPrice(updatedPrice)
+            setEditProduct(false)
+        } catch (error) {
+            toast.error(error.response.data.msg, { autoClose: 500, theme: 'colored' })
         }
     }
 
@@ -68,13 +92,20 @@ export default function ProductCard({ prod, isUserProduct}) {
                 </CardContent>
             </CardActionArea>
             <CardActions style={{ display: "flex", justifyContent: "space-between", width: '100%' }}>
-                <Typography variant="h6" color="primary">
-                    €{product.price}
-                </Typography>
+                {editProduct ? 
+                    (<>
+                        <input style={{width:"40px", height:"30px"}} type="number" value={updatedPrice} onChange={(e) => setUpdatedPrice(e.target.value)} />
+                        <Button variant="outlined" aria-label="outlined button group" onClick={updateProduct}>Save</Button>
+                    </>)
+                    :
+                    <Typography variant="h6" color="primary">
+                        €{productPrice}
+                    </Typography>
+                }
                 <ButtonGroup variant="outlined" aria-label="outlined button group">
-                    <Button onClick={decreaseQuantity}>-</Button>
+                    {!isUserProduct && <Button onClick={decreaseQuantity}>-</Button>}
                     <Button>{productQuantity}</Button>
-                    <Button onClick={increaseQuantity}>+</Button>
+                    {!isUserProduct && <Button onClick={increaseQuantity}>+</Button>}
                 </ButtonGroup>
             </CardActions>
             <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color="primary">
@@ -84,6 +115,7 @@ export default function ProductCard({ prod, isUserProduct}) {
                 Date Added : {product.date_added.slice(0, 10)}
             </Typography>
             {!  isUserProduct && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
+            {isUserProduct && <Button onClick={() => setEditProduct(!editProduct)} variant="contained" color="primary" fullWidth>Edit Product</Button> }
         </Card >
     );
 }

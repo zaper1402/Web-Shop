@@ -80,9 +80,9 @@ def protected_view(request):
 
 # Product operations
 def get_products(request):
-    error =  protected_view(request)
-    if not error is None:
-        return error
+    # error =  protected_view(request)
+    # if not error is None:
+    #     return error
     products = Product.objects.all()
     data = []
     for product in products:
@@ -195,6 +195,32 @@ def add_inventory(request):
             'quantity': inventory.quantity
         })
         return JsonResponse({'message': 'Inventory added successfully','data': data}, status=201)
+    else:
+        return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
+    
+@csrf_exempt
+def update_product(request):
+    if request.method == 'POST':
+        jsonData = json.loads(request.body)
+        product_id = jsonData.get('product_id')
+        name = jsonData.get('name')
+        description = jsonData.get('description')
+        price = jsonData.get('price')
+        product = None
+        print(jsonData)
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return JsonResponse({'error': 'Product not found'}, status=404)
+        if name != None:
+            product.name = name
+        if description != None:
+            product.description = description
+        if price != None:
+            print(price)
+            product.price = price
+        product.save()
+        return JsonResponse({'message': 'Product updated successfully'})
     else:
         return JsonResponse({'error': 'Only POST method is allowed'}, status=400)
     
