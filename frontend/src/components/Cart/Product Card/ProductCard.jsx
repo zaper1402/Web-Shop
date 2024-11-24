@@ -80,6 +80,9 @@ export default function ProductCard({ prod, isUserProduct}) {
             <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color="primary">
                 {quantity} in stock
             </Typography>
+            <Typography gutterBottom variant="h8" sx={{ textAlign: "center" }}>
+                Date Added : {product.date_added.slice(0, 10)}
+            </Typography>
             {!  isUserProduct && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
         </Card >
     );

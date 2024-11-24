@@ -1,3 +1,4 @@
+from django.utils import timezone
 import json
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -90,6 +91,7 @@ def get_products(request):
             'name': product.name,
             'description': product.description,
             'price': product.price,
+            'date_added': product.date_added,
             'image': "" if not product.image else product.image.url
         })
     return JsonResponse(data, safe=False)
@@ -106,7 +108,7 @@ def get_inventory(request):
         product_data['image'] = item.product.image.url if item.product.image else ''
         data.append({
             'id': item.id,
-            'user': model_to_dict(item.user),
+            'user': model_to_dict(item.user,exclude=['password']),
             'product': product_data,
             'quantity': item.quantity
         })
@@ -137,19 +139,30 @@ def get_inventory_by_id(request):
 @csrf_exempt
 def add_inventory(request):
     if request.method == 'POST':
-        body = json.loads(request.body)
-        logging.debug(body)
-        product_id = body.get('product_id')
-        quantity = body.get('quantity')
-        user_id = body.get('user_id')
+        product_id = request.POST.get('product_id')
+        quantity = request.POST.get('quantity')
+        user_id = request.POST.get('user_id')
 
         product = None
         user = None
         if not product_id:
-            p_name = body.get('name')
-            p_description = body.get('description')
-            p_price = body.get('price')
-            product = Product(name=p_name, description=p_description, price=p_price)
+            p_name = request.POST.get('name')
+            p_description = request.POST.get('description') 
+            p_price = request.POST.get('price')
+            print(request.FILES)
+            # Handle image file upload
+            if 'image' in request.FILES:
+                image_file = request.FILES['image']
+                # Convert image to base64
+                image = Image.open(image_file)
+                image = image.convert("RGB")
+                image.thumbnail((300, 300), Image.LANCZOS)
+                buffer = io.BytesIO()
+                image.save(buffer, format="JPEG")
+                encoded_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            else:
+                encoded_image = ""
+            product = Product(name=p_name, description=p_description, price=p_price, image=encoded_image)
         else:
             try:
                 product = Product.objects.get(id=product_id)
@@ -264,15 +277,14 @@ def populate_db(request):
                 name=f'Product {count}',
                 description=f'Sample description {count}',
                 price=(10.0 * j)%7,
-                image= img             
+                image= img
             )
-            count += 1
-            Inventory.objects.create(
+            inventory = Inventory.objects.create(
                 product=product,
                 quantity=10,
                 user=user
             )
-
+           
     return JsonResponse({'message': 'Database populated successfully'})
 
 def decode_image(image_path):
