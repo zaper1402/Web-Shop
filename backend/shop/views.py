@@ -129,7 +129,9 @@ def get_inventory(request):
             'id': item.id,
             'user': model_to_dict(item.user,exclude=['password']),
             'product': product_data,
-            'quantity': item.quantity
+            'quantity': item.quantity,
+            'date_added': item.date_added,
+            'category': item.category
         })
     return JsonResponse(data, safe=False)
 
@@ -149,7 +151,9 @@ def get_inventory_by_id(request):
                 'id': item.id,
                 'user': model_to_dict(item.user, exclude=['password']),
                 'product': product_data,
-                'quantity': item.quantity
+                'quantity': item.quantity,
+                'date_added': item.date_added,
+                'category': item.category
             })
         return JsonResponse(data, safe=False)
 
@@ -264,10 +268,14 @@ def place_order(request):
                     inventoryItem = Inventory.objects.get(id = id)
                 except Product.DoesNotExist:
                     return JsonResponse({'error': 'Product not found'}, status=404)
+                if inventoryItem.quantity < int(quantity):
+                    return JsonResponse({'error': 'Not enough stock'}, status=400)
                 
                 total = inventoryItem.product.price * int(quantity)
                 order = Order(inventoryItem=inventoryItem, user=user, quantity=quantity, total=total)
                 inventoryItem.quantity -= int(quantity)
+                if inventoryItem.quantity == 0:
+                        inventoryItem.category = "Sold"
                 inventoryItemList.append(inventoryItem)
                 
         else:

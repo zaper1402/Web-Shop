@@ -11,6 +11,7 @@ import { toast } from 'react-toastify'
 
 const AddItems = () => {
     const { userInventory, setUserInventory } = useContext(ContextFunction)
+    const [selectedFilter, setSelectedFilter] = useState('onSale')
     const [filteredData, setFilteredData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [showForm, setShowForm] = useState(false);
@@ -104,10 +105,14 @@ const AddItems = () => {
 
     const handleChange = (e) => {
         //filter setProductData based on e.target.value
-        if (e.target.value === undefined || e.target.value === 'All' || e.target.value === '') {
-            setFilteredData(productData)
+       
+        if (e.target.value === selectedFilter) {
+            setSelectedFilter('')
+            setFilteredData(userInventory)
         } else {
-            setFilteredData(productData.filter(prod => prod.product.name.includes(e.target.value)))
+            console.log(e.target.value, selectedFilter)
+            setSelectedFilter(e.target.value)
+            setFilteredData(userInventory.filter(prod => prod.category.includes(e.target.value)))
         }
     }
 
@@ -197,6 +202,28 @@ const AddItems = () => {
                     <Container style={{ marginTop: 90, display: "flex", justifyContent: 'center' }}>
                         <SearchBar eventListener={handleChange} />
                     </Container>
+                    {/* Add three filter list options here "Sold", "Purchased", "OnSale" */}
+                    <Container style={{ marginTop: 20, width:'400px', display: 'flex', justifyContent: 'space-between' }}>
+                        <Button 
+                            variant={selectedFilter === 'Sold' ? 'contained' : 'outlined'} 
+                            onClick={() => handleChange({ target: { value: 'Sold' } })}
+                        >
+                            Sold
+                        </Button>
+                        <Button 
+                            variant={selectedFilter === 'Purchased' ? 'contained' : 'outlined'} 
+                            onClick={() => handleChange({ target: { value: 'Purchased' } })}
+                        >
+                            Purchased
+                        </Button>
+                        <Button 
+                            variant={selectedFilter === 'onSale' ? 'contained' : 'outlined'} 
+                            onClick={() => handleChange({ target: { value: 'onSale' } })}
+                        >
+                            OnSale
+                        </Button>
+                    </Container>
+                    
                     {loading}
                     <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
                         {filteredData.map(prod => (
