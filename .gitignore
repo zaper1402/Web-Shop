@@ -27,8 +27,6 @@ local_settings.py
 *.pyo
 *.pyd
 
-# Django migrations
-**/migrations/
 
 # Logs
 logs
