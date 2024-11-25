@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -17,19 +17,21 @@ import axios from 'axios'
 import { baseUrl, populate_db } from './Constants/urls'
 import { toast } from 'react-toastify'
 import Account from './pages/Account'
+import { ContextFunction } from './Context/Context'
+import { getAllInventory } from './Constants/Constant'
 
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {products, setProducts} = useContext(ContextFunction)
   let authToken = localStorage.getItem('Authorization')
   let setProceed = authToken ? true : false
 
   const navigate = useNavigate();
   useEffect(() => {
     // show login if not register or login route
-
-    if (!setProceed && window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+    if (!setProceed && window.location.pathname !== '/' && window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
+      toast.error('Please login to continue', { autoClose: 200, theme: 'colored' })
       navigate('/login');
     }
   }, [setProceed, navigate]);
@@ -44,6 +46,8 @@ function App() {
                 }
             }
         );
+        getAllInventory(setProducts)
+        window.location.reload()
         toast.success('Database Populated', {autoClose: 2000, theme: 'colored' })
     } catch (error) {
         setIsLoading(false)
@@ -57,7 +61,8 @@ function App() {
       <ToastContainer toastClassName="toastContainerBox" transition={Flip} position="top-right" />
       <DesktopNav />
       <div className='margin'></div>
-      {!setProceed && 
+
+      {!setProceed && (window.location.pathname == '/login' || window.location.pathname == '/signup' || products.length == 0) &&
                 <Button variant='contained' className='nav-icon-span' sx={{ marginBottom: 1, marginInlineStart: 10 }} onClick={() => populateDB()} >
                     <Typography variant='button'> Populate DB</Typography>
                 </Button>
@@ -65,9 +70,9 @@ function App() {
       <Routes>
         <Route path="/" index element={<Homepage />} />
         <Route path="/login" element={< Login />} />
-        <Route path='/register' element={<Register />} />
+        <Route path='/signup' element={<Register />} />
         <Route path="/cart" index element={<Cart />} />
-        <Route path="/add-items" element={<AddItems />} />
+        <Route path="/myitems" element={<AddItems />} />
         <Route path="/account" element={<Account />} />
       </Routes>
     </>

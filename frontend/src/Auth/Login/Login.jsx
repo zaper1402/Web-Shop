@@ -138,7 +138,7 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link to="/register" variant="body2" >
+              <Link to="/signup" variant="body2" >
                 Don't have an account?<span style={{ color: '#1976d2' }}> Sign Up</span>
               </Link>
             </Grid>

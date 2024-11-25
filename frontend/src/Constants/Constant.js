@@ -39,7 +39,13 @@ const handleClose = (setOpenAlert) => {
 
 const getAllInventory = async (setData) => {
     try {
-        const { data } = await axios.get(baseUrl + allInventoryUrl);
+        const { data } = await axios.post(`${baseUrl}${allInventoryUrl}`, { "user_id": localStorage.getItem('user_id') },
+                {
+                    headers: {
+                        'Authorization': localStorage.getItem('Authorization')
+                    }
+                }
+            );
         setData(data)
     } catch (error) {
         console.log(error);

@@ -6,12 +6,13 @@ import ProductCard from '../Cart/Product Card/ProductCard'
 import { baseUrl, allInventoryUrl, populate_db } from '../../Constants/urls'
 import SearchBar from '../SearchBar/SearchBar'
 import { Button, Typography, Container, } from '@mui/material'
+import { ContextFunction } from '../../Context/Context'
 
 
 
 const Products = () => {
 
-    const [productData, setProductData] = useState([])
+    const {products, setProducts} = useContext(ContextFunction)
     const [filteredData, setFilteredData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
@@ -33,7 +34,7 @@ const Products = () => {
             );
             setIsLoading(false)
             console.log(data);
-            setProductData(data)
+            setProducts(data)
             setFilteredData(data)
 
         } catch (error) {
@@ -44,11 +45,11 @@ const Products = () => {
   
 
     const handleChange = (e) => {
-        //filter setProductData based on e.target.value
+        //filter setProducts based on e.target.value
         if (e.target.value === undefined || e.target.value === 'All' || e.target.value === '') {
-            setFilteredData(productData)
+            setFilteredData(products)
         } else {
-            setFilteredData(productData.filter(prod => prod.product.name.includes(e.target.value)))
+            setFilteredData(products.filter(prod => prod.product.name.includes(e.target.value)))
         }
     }
 

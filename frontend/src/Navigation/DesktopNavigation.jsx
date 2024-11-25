@@ -48,8 +48,8 @@ const DesktopNavigation = () => {
             </li>
             <li className="nav-links">
               <Tooltip title='Wishlist'>
-                <NavLink to="/add-items">
-                  <span className='nav-icon-span'>Add Items  <Badge badgeContent={setProceed ? userInventory.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
+                <NavLink to="/myitems">
+                  <span className='nav-icon-span'>My Items  <Badge badgeContent={setProceed ? userInventory.length : 0}> <AiOutlineCheckSquare className='nav-icon' /></Badge></span>
                 </NavLink>
               </Tooltip>
             </li>
