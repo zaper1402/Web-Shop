@@ -120,7 +120,7 @@ def get_products(request):
 def get_inventory(request):
     jdata = json.loads(request.body)
     user_id = jdata.get('user_id')
-    inventory = Inventory.objects.all().exclude(user_id=user_id)
+    inventory = Inventory.objects.all().exclude(user_id=user_id).exclude(category="Purchased")
     data = []
     for item in inventory:
         product_data = model_to_dict(item.product, exclude=['image'])
@@ -274,7 +274,11 @@ def update_cart(request):
         if not user_id:
             return JsonResponse({'error': 'User not found'}, status=404)
         if isinstance(cart, list):
-            oldCart = Cart.objects.get(user=user_id)
+            oldCart = None
+            try:
+                oldCart = Cart.objects.get(user=user_id)
+            except Cart.DoesNotExist:
+                pass
             print(f"Oldcart {oldCart}")
             if oldCart:
                 print(f"Oldcart {oldCart.inventory}")
@@ -307,6 +311,7 @@ def place_order(request):
                 id = item.get('id')
                 buyer_id = item.get('buyer_id')
                 quantity = item.get('quantity')
+                product = item.get('product')
                 inventoryItem = None
                 user = None
                 try:
@@ -316,9 +321,22 @@ def place_order(request):
                 try:
                     inventoryItem = Inventory.objects.get(id = id)
                 except Product.DoesNotExist:
-                    return JsonResponse({'error': 'Product not found'}, status=404)
+                    return JsonResponse({'error': 'Product not found:', "errorCode": 40401, "productName":product['name']}, status=404 )
                 if inventoryItem.quantity < int(quantity):
-                    return JsonResponse({'error': 'Not enough stock'}, status=400)
+                    return JsonResponse({'error': 'Not enough stock', "errorCode": 40402, "productName":product['name']}, status=400)
+                
+                if(str(inventoryItem.product.price) != product['price']):
+                    print(type(inventoryItem.product.price), type(product['price']))
+                    cart = Cart.objects.get(user=buyer_id)
+                    oldInventory = json.loads(cart.inventory)
+                    for oldItem in oldInventory:
+                        old_product = oldItem.get('product', {})
+                        if old_product.get('id') == product.get('id'):
+                            old_product['price'] = str(inventoryItem.product.price)
+                            break
+                    cart.inventory = json.dumps(oldInventory)
+                    cart.save()
+                    return JsonResponse({'error': 'Price mismatch ', "errorCode": 40403, "productName":product['name']}, status=400)
                 
                 total = inventoryItem.product.price * int(quantity)
                 order = Order(inventoryItem=inventoryItem, user=user, quantity=quantity, total=total).save()
@@ -365,10 +383,11 @@ def populate_db(request):
     # Create 6 users
     users = []  
     for i in range(1, 7):
+        hashed_password = make_password(f'pass{i}')
         user = User.objects.create(
             name=f'testuser{i}',
             email=f'testuser{i}@shop.aa',
-            password=f'pass{i}'
+            password=hashed_password
         )
         users.append(user)
 

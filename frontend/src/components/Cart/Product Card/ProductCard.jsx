@@ -21,15 +21,20 @@ export default function ProductCard({ prod, isUserProduct}) {
     const addToCart = async (product) => {
         if (setProceed) {
             try {
-                const existingProductIndex = cart.findIndex(item => item.id === prod.id);
+                const existingProductIndex = cart.findIndex(item => 
+                    item.product.id === prod.product.id);
                 if (existingProductIndex !== -1) {
+                    console.log(`existing product index: ${existingProductIndex}`);
                     const updatedCart = [...cart];
-                    if (productQuantity > 0) {
+                    if (productQuantity > 0 && (updatedCart[existingProductIndex].quantity+productQuantity) >= quantity) {
+                        toast.error("Quantity in cart exceeds stock", { autoClose: 500, theme: 'colored' })
+                    }else if (productQuantity > 0) {
                         updatedCart[existingProductIndex].quantity += productQuantity;
+                        updateCartToServer(updatedCart);
                     } else {
                         updatedCart.splice(existingProductIndex, 1);
+                        updateCartToServer(updatedCart);
                     }
-                    updateCartToServer(updatedCart);
                 } else {
                     if (productQuantity > 0) {
                         const updatedCart = [...cart, { ...prod, quantity: productQuantity }];
@@ -127,7 +132,7 @@ export default function ProductCard({ prod, isUserProduct}) {
                 }
                 <ButtonGroup variant="outlined" aria-label="outlined button group">
                     {!isUserProduct && <Button onClick={decreaseQuantity}>-</Button>}
-                    <Button>{productQuantity}</Button>
+                    {!isUserProduct && <Button>{productQuantity}</Button>}
                     {!isUserProduct && <Button onClick={increaseQuantity}>+</Button>}
                 </ButtonGroup>
             </CardActions>

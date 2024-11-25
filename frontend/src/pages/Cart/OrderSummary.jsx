@@ -31,7 +31,7 @@ const OrderSummary = ({ proceedToCheckout, total }) => {
             </CardContent>
             <CardActions sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
                 <Button variant='contained' size='large' endIcon={<IoBagCheckOutline />} color="primary" onClick={proceedToCheckout}>
-                    Checkout
+                    Pay
                 </Button>
             </CardActions>
         </Card >

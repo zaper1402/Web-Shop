@@ -20,6 +20,9 @@ const getCart = async (setProceed, setCart, authToken) => {
 const handleLogOut = (setProceed, toast, navigate, setOpenAlert) => {
     if (setProceed) {
         localStorage.removeItem('Authorization')
+        localStorage.removeItem('user_id')
+        localStorage.removeItem('user_name')
+        localStorage.removeItem('password')
         toast.success("Logout Successfully", { autoClose: 500, theme: 'colored' })
         navigate('/')
         setOpenAlert(false)

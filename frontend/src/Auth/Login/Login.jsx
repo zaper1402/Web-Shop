@@ -37,10 +37,7 @@ const Login = () => {
       if (!credentials.email && !credentials.password) {
         toast.error("All fields are required", { autoClose: 500, theme: 'colored' })
       }
-      else if (!emailRegex.test(credentials.email)) {
-        toast.error("Please enter a valid email", { autoClose: 500, theme: 'colored' })
-      }
-      else if (credentials.password.length < 5) {
+      else if (credentials.password.length < 1) {
         toast.error("Please enter valid password", { autoClose: 500, theme: 'colored' })
       }
       else if (credentials.email && credentials.password) {

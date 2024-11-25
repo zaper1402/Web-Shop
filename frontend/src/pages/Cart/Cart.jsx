@@ -142,6 +142,16 @@ const Cart = () => {
                 clearCart()
                 toast.success("order placed", { autoClose: 500, theme: 'colored' })
             } catch (error) {
+                console.log(error.response.data);
+                if(error.response.data.errorCode === 40401){
+                    toast.error(`Product no longer exists: ${error.response.data.productName}`, { autoClose: 1000, theme: 'colored' })
+                    setOpenAlert(true)
+                }else if(error.response.data.errorCode === 40402){
+                    toast.error(`Not enough stock: ${error.response.data.productName}`, { autoClose: 1000, theme: 'colored' })
+                }else if(error.response.data.errorCode === 40403){
+                    toast.error(`Price mismatch: ${error.response.data.productName}`, { autoClose: 1000, theme: 'colored' })
+                    getCart()
+                }
                 console.log(error);
             }
         }
