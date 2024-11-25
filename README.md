@@ -23,8 +23,11 @@ Email : ashir.kulshreshtha@abo.fi
 
 ## How to run the project 
 ### Backend
+-- Use `python` or `python3` based on your path variable
 `cd backend`
-`.\venv\Scripts\activate.bat`
+`pip install virtualenv`
+`python -m venv venv`
+`.\venv\Scripts\activate.bat` , on Linux : `source venv/bin/activate`
 `pip install -r requirements.txt`
 `python manage.py runserver`
 
