@@ -397,11 +397,11 @@ def populate_db(request):
         for j in range(1, 11):
             # pick files from asset folder to poppuate the image field
             image_files = [
-                'E:/Web-Shop/backend/shop/assets/img1.jpg',
-                'E:/Web-Shop/backend/shop/assets/img2.jpg',
-                'E:/Web-Shop/backend/shop/assets/img3.jpg',
-                'E:/Web-Shop/backend/shop/assets/img5.jpg',
-                'E:/Web-Shop/backend/shop/assets/img6.jpg',
+                './assets/img1.jpg',
+                './assets/img2.jpg',
+                './assets/img3.jpg',
+                './assets/img5.jpg',
+                './assets/img6.jpg',
             ]
             image_path = random.choice(image_files)
             img = decode_image(image_path)
