@@ -1,3 +1,4 @@
+import os
 from django.utils import timezone
 import json
 from django.shortcuts import render
@@ -402,9 +403,10 @@ def populate_db(request):
                 './assets/img3.jpg',
                 './assets/img5.jpg',
                 './assets/img6.jpg',
-            ]
+            ]            
             image_path = random.choice(image_files)
-            img = decode_image(image_path)
+            file_path = os.path.join(os.path.dirname(__file__), image_path)
+            img = decode_image(file_path)
             product = Product.objects.create(
                 name=f'Product {count}',
                 description=f'Sample description {count}',
