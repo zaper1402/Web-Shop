@@ -199,9 +199,9 @@ const AddItems = () => {
             )}
             <ul>
                 <Container maxWidth='xl' style={{ marginTop: 90, display: 'flex', justifyContent: "center", flexDirection: "column" }}>
-                    <Container style={{ marginTop: 90, display: "flex", justifyContent: 'center' }}>
+                    {/* <Container style={{ marginTop: 90, display: "flex", justifyContent: 'center' }}>
                         <SearchBar eventListener={handleChange} />
-                    </Container>
+                    </Container> */}
                     {/* Add three filter list options here "Sold", "Purchased", "OnSale" */}
                     <Container style={{ marginTop: 20, width:'400px', display: 'flex', justifyContent: 'space-between' }}>
                         <Button 
