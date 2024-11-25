@@ -280,9 +280,7 @@ def update_cart(request):
                 oldCart = Cart.objects.get(user=user_id)
             except Cart.DoesNotExist:
                 pass
-            print(f"Oldcart {oldCart}")
             if oldCart:
-                print(f"Oldcart {oldCart.inventory}")
                 oldCart.inventory = cartStr
                 oldCart.save()
             else:
@@ -308,7 +306,6 @@ def place_order(request):
         inventoryItemList = []
         if isinstance(body, list):
             for item in body:
-                print(request.headers)
                 id = item.get('id')
                 buyer_id = item.get('buyer_id')
                 quantity = item.get('quantity')
@@ -344,24 +341,38 @@ def place_order(request):
                 inventoryItem.quantity -= int(quantity)
                 if inventoryItem.quantity == 0:
                         inventoryItem.category = "Sold"
-                newItem = Inventory(
-                    product=inventoryItem.product,
-                    quantity=int(quantity),
-                    category="Purchased",
-                    user=user,
-                    date_added=timezone.now().strftime('%Y-%m-%d %H:%M:%S')
-                )
+
+                existingItem = None
+                try:
+                    existingItem = Inventory.objects.get(user=user, product=inventoryItem.product, category="Purchased")
+                except Inventory.DoesNotExist:
+                    existingItem = None
+                newItem = None
+                if existingItem:
+                    newItem = existingItem
+                    newItem.quantity += int(quantity)
+                else:
+                    newItem = Inventory(
+                        product=inventoryItem.product,
+                        quantity=int(quantity),
+                        category="Purchased",
+                        user=user,
+                        date_added=timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+                    )
                 oldInventory.append(inventoryItem)
-                inventoryItemList.append(newItem)
-                
+                inventoryItemList.append(newItem)     
         else:
             return JsonResponse({'error': 'Invalid request'},status=400)
+        
         try:
             # ordser.save()
+            print(len(inventoryItemList), len(oldInventory))
             for item, old_item in zip(inventoryItemList, oldInventory):
+                print(F"item: {item.product.name}, old_item: {old_item.product.name}")
+                print(item, old_item)
                 item.save()
                 old_item.save()
-                return JsonResponse({'message': 'Order placed successfully'})
+            return JsonResponse({'message': 'Order placed successfully'})
         except Exception as e:
             return JsonResponse({'error': 'Failed to place order'}, status=500)
     else:
