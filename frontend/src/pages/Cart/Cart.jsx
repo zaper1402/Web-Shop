@@ -29,7 +29,6 @@ const Cart = () => {
     const [total, setTotal] = useState(0)
     const [openAlert, setOpenAlert] = useState(false);
     const [previousOrder, setPreviousOrder] = useState([]);
-    const [isLoading, setIsLoading] = useState(false)
 
 
     const navigate = useNavigate()
@@ -39,7 +38,6 @@ const Cart = () => {
     useEffect(() => {
         if (setProceed) {
             getCart()
-            getPreviousOrder()
         }
         else {
             setOpenAlert(true)
@@ -77,15 +75,6 @@ const Cart = () => {
     const handleToLogin = () => {
         navigate('/login')
     };
-    const getPreviousOrder = async () => {
-        const { data } = await axios.get(`${process.env.REACT_APP_GET_PREVIOUS_ORDER}`,
-            {
-                headers: {
-                    'Authorization': authToken
-                }
-            })
-        setPreviousOrder(data)
-    }
 
     const removeFromCart = async (product) => {
         if (setProceed) {

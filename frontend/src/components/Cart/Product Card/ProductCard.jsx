@@ -1,7 +1,7 @@
-import { Box, Card, CardActionArea, CardActions, Rating, CardContent, Typography, ButtonGroup, Button, CardHeader } from '@mui/material';
+import { Box, Card, CardActionArea, CardActions, CardContent, Typography, ButtonGroup, Button } from '@mui/material';
 import styles from './ProductCard.module.css'
 import { ContextFunction } from '../../../Context/Context';
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { toast } from 'react-toastify'
 import { baseUrl, update_product,set_cart} from '../../../Constants/urls';
 import axios from 'axios';

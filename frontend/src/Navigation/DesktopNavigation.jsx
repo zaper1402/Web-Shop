@@ -4,10 +4,10 @@ import { AiOutlineShoppingCart, AiFillCloseCircle, AiOutlineCheckSquare } from '
 import { CgProfile } from 'react-icons/cg'
 import { FiLogOut } from 'react-icons/fi'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Badge, Button, Dialog, DialogActions, DialogContent, Menu, MenuItem, Slide, Tooltip, Typography } from '@mui/material';
+import { Badge, Button, Dialog, DialogActions, DialogContent, Slide, Tooltip, Typography } from '@mui/material';
 import { ContextFunction } from '../Context/Context';
 import { toast } from 'react-toastify';
-import { getCart, handleLogOut, handleClickOpen, handleClose, getUserProducts } from '../Constants/Constant'
+import {  handleLogOut, handleClickOpen, handleClose, getUserProducts } from '../Constants/Constant'
 
 const DesktopNavigation = () => {
 
@@ -18,7 +18,6 @@ const DesktopNavigation = () => {
   let setProceed = authToken !== null ? true : false
   useEffect(() => {
     setCart([])
-    getCart(setProceed, setCart, authToken)
     getUserProducts(setProceed,setUserInventory)
   }, [])
 

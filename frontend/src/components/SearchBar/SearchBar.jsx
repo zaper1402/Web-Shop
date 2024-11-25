@@ -11,10 +11,6 @@ const SearchBar = ({eventListener}) => {
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // useEffect(() => {
-    //     getAllProducts(setData);
-    // }, [])
-
     const handleSearch = event => {
         let value = event.target.value;
         setSearchTerm(event.target.value);
@@ -46,24 +42,6 @@ const SearchBar = ({eventListener}) => {
                     ),
                 }}
             />
-            {/* {
-                searchTerm.length > 0 &&
-                <Box sx={{ width: { xs: 350, sm: 500, md: 800 }, overflowY: "scroll", height: "200px" }}>
-                    <Stack spacing={0}>
-
-                        {filteredData.length === 0 ?
-                            <Typography variant="h6" textAlign="center" margin="25px 0">Product Not Found</Typography>
-                            : filteredData.map(products => (
-                                <Link to={`/Detail/type/${products.type}/${products._id}`} key={products._id}>
-                                    <Item sx={{ borderRadius: 0, display: 'flex', justifyContent: 'space-between', padding: "2px 15px", alignItems: 'center' }}>
-                                        <Typography variant="body2"> {products.name.slice(0, 35)}</Typography>
-                                        <img src={products.image} alt={products.name} style={{ width: 55, height: 65 }} />
-                                    </Item>
-                                </Link>
-                            ))}
-                    </Stack>
-                </Box>
-            } */}
         </Container >
     )
 }

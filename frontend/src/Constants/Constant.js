@@ -1,21 +1,6 @@
-import { Slide } from "@mui/material";
-import { useContext } from "react";
 import axios from 'axios';
-import {baseUrl,allInventoryUrl, get_inventory, set_cart} from '../Constants/urls'
-import { ContextFunction } from '../Context/Context';
+import {baseUrl,allInventoryUrl, get_inventory} from '../Constants/urls'
 
-const getCart = async (setProceed, setCart, authToken) => {
-    if (setProceed) {
-        // const { data } = await axios.get(baseUrl + productUrl,
-        //     {
-        //         headers: {
-        //             'Authorization': authToken
-        //         }
-        //     })
-     
-        // setCart(data);
-    }
-}
 
 const handleLogOut = (setProceed, toast, navigate, setOpenAlert) => {
     if (setProceed) {
@@ -23,6 +8,7 @@ const handleLogOut = (setProceed, toast, navigate, setOpenAlert) => {
         localStorage.removeItem('user_id')
         localStorage.removeItem('user_name')
         localStorage.removeItem('password')
+        setCart([])
         toast.success("Logout Successfully", { autoClose: 500, theme: 'colored' })
         navigate('/')
         setOpenAlert(false)
@@ -74,20 +60,7 @@ const getUserProducts = async (setProceed, setUserInventory) => {
     }
 }
 
-const getSingleProduct = async (setProduct, id, setLoading) => {
-
-    const { data } = await axios.get(`${process.env.REACT_APP_FETCH_PRODUCT}/${id}`)
-    setProduct(data)
-    setLoading(false);
-
-}
-
-// const Transition = forwardRef(function Transition(props, ref) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-// });
 
 
 
-
-
-export { getCart, handleClickOpen, handleClose, handleLogOut, getSingleProduct, getAllInventory, getUserProducts }
+export { handleClickOpen, handleClose, handleLogOut, getAllInventory, getUserProducts }

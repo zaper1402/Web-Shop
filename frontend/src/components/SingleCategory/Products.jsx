@@ -3,9 +3,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import Loading from '../loading/Loading'
 import ProductCard from '../Cart/Product Card/ProductCard'
-import { baseUrl, allInventoryUrl, populate_db } from '../../Constants/urls'
+import { baseUrl, allInventoryUrl } from '../../Constants/urls'
 import SearchBar from '../SearchBar/SearchBar'
-import { Button, Typography, Container, } from '@mui/material'
+import { Container, } from '@mui/material'
 import { ContextFunction } from '../../Context/Context'
 
 
