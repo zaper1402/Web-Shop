@@ -174,6 +174,7 @@ def add_inventory(request):
             p_description = request.POST.get('description') 
             p_price = request.POST.get('price')
             # Handle image file upload
+            print(request.FILES)
             if 'image' in request.FILES:
                 image_file = request.FILES['image']
                 # Convert image to base64
@@ -202,13 +203,14 @@ def add_inventory(request):
             inventory.quantity += int(quantity)
             inventory.save()
         except:
-            savedProduct, created = Product.objects.get_or_create(name=product.name, description=product.description, price=product.price)
+            savedProduct, created = Product.objects.get_or_create(name=product.name, description=product.description, price=product.price, image=product.image)
             if savedProduct:
                 inventory = Inventory(product=savedProduct, quantity=quantity, user=user,category="Purchased")
                 inventory.save()
             else:
                 return JsonResponse({'error': 'Product not created'}, status=404)
         product_data = model_to_dict(inventory.product, exclude=['image'])
+        print(inventory.product.image.url)
         product_data['image'] = inventory.product.image.url if inventory.product.image else ''
         data = []
         data.append({
