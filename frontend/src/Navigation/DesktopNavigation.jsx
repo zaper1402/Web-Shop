@@ -7,7 +7,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Badge, Button, Dialog, DialogActions, DialogContent, Slide, Tooltip, Typography } from '@mui/material';
 import { ContextFunction } from '../Context/Context';
 import { toast } from 'react-toastify';
-import {  handleLogOut, handleClickOpen, handleClose, getUserProducts } from '../Constants/Constant'
+import {  handleLogOut, handleClickOpen, handleClose, getUserProducts, getCart } from '../Constants/Constant'
 
 const DesktopNavigation = () => {
 
@@ -17,7 +17,7 @@ const DesktopNavigation = () => {
   let authToken = localStorage.getItem('Authorization');
   let setProceed = authToken !== null ? true : false
   useEffect(() => {
-    setCart([])
+    getCart(setProceed,setCart)
     getUserProducts(setProceed,setUserInventory)
   }, [])
 
@@ -92,7 +92,7 @@ const DesktopNavigation = () => {
         </DialogContent>
         <DialogActions sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
           <Link to="/">
-            <Button variant='contained' endIcon={<FiLogOut />} color='primary' onClick={() => handleLogOut(setProceed, toast, navigate, setOpenAlert)}>Logout</Button></Link>
+            <Button variant='contained' endIcon={<FiLogOut />} color='primary' onClick={() => handleLogOut(setProceed, toast, navigate, setOpenAlert,setCart,setUserInventory)}>Logout</Button></Link>
           <Button variant='contained' color='error' endIcon={<AiFillCloseCircle />} onClick={() => handleClose(setOpenAlert)}>Close</Button>
         </DialogActions>
       </Dialog>

@@ -7,7 +7,7 @@ import { baseUrl, update_product,set_cart} from '../../../Constants/urls';
 import axios from 'axios';
 
 
-export default function ProductCard({ prod, isUserProduct}) {
+export default function ProductCard({ prod, isUserProduct, isEditable}) {
     const product = prod.product
     const quantity = prod.quantity
     let authToken = localStorage.getItem('Authorization')
@@ -143,7 +143,7 @@ export default function ProductCard({ prod, isUserProduct}) {
                 Date Added : {product.date_added.slice(0, 10)}
             </Typography>
             {!isUserProduct && setProceed && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
-            {isUserProduct && <Button onClick={() => setEditProduct(!editProduct)} variant="contained" color="primary" fullWidth>Edit Product</Button> }
+            {isEditable && <Button onClick={() => setEditProduct(!editProduct)} variant="contained" color="primary" fullWidth>Edit Product</Button> }
         </Card >
     );
 }

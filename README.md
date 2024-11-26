@@ -36,7 +36,13 @@ Email : ashir.kulshreshtha@abo.fi
 `npm install`
 `npm run dev`
 
+# Note 
+1) Test User 1 login credentials :
+    email : testUser1@shop.aa
+    password: pass1
+2) **Item in sold category appear once they are completely sold out (0 in stock). 
 
-## backend API's to clear DB
+
+## backend APIto clear DB
 curl --location 'http://127.0.0.1:8000/shop/deleteAll' \
 --header 'Cookie: sessionid=eiwe4x6iatfmr4a0hfnycxz98zw5eh0p'

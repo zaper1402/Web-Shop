@@ -1,14 +1,14 @@
 import axios from 'axios';
-import {baseUrl,allInventoryUrl, get_inventory} from '../Constants/urls'
+import {baseUrl,allInventoryUrl, get_inventory,get_cart} from '../Constants/urls'
 
 
-const handleLogOut = (setProceed, toast, navigate, setOpenAlert) => {
+const handleLogOut = (setProceed, toast, navigate, setOpenAlert,setCart,setUserInventory) => {
     if (setProceed) {
         localStorage.removeItem('Authorization')
         localStorage.removeItem('user_id')
         localStorage.removeItem('user_name')
         localStorage.removeItem('password')
-        setCart([])
+        
         toast.success("Logout Successfully", { autoClose: 500, theme: 'colored' })
         navigate('/')
         setOpenAlert(false)
@@ -41,6 +41,22 @@ const getAllInventory = async (setData) => {
     }
 }
 
+const getCart = async (setProceed, setCart) => {
+    if (setProceed) {
+        const formData = new FormData();
+        formData.append('user_id', localStorage.getItem('user_id'));
+        const { data } = await axios.get(`${baseUrl}${get_cart}?user_id=${localStorage.getItem('user_id')}`,
+            {
+                headers: {
+                    'Authorization': localStorage.getItem('Authorization')
+                }
+            })
+        console.log(`Get cart:${data.inventory.length}`);
+        setCart(data.inventory);
+    }
+
+}
+
 const getUserProducts = async (setProceed, setUserInventory) => {
     try {
         if (!setProceed) {
@@ -63,4 +79,4 @@ const getUserProducts = async (setProceed, setUserInventory) => {
 
 
 
-export { handleClickOpen, handleClose, handleLogOut, getAllInventory, getUserProducts }
+export { handleClickOpen, handleClose, handleLogOut, getAllInventory, getUserProducts, getCart }

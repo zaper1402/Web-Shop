@@ -26,6 +26,7 @@ function App() {
   const {products, setProducts} = useContext(ContextFunction)
   let authToken = localStorage.getItem('Authorization')
   let setProceed = authToken ? true : false
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -39,6 +40,11 @@ function App() {
   const populateDB = async () => {
     try {
         console.log(`loading product data `);
+        if(isLoading) {
+          toast.info('Populating Database please wait for success', {autoClose: 2000, theme: 'colored' })
+          return
+        }
+        setIsLoading(true)
         const { data } = await axios.get(`${baseUrl}${populate_db}`,
             {
                 headers: {
@@ -46,8 +52,11 @@ function App() {
                 }
             }
         );
+        setIsLoading(false)
         getAllInventory(setProducts)
-        window.location.reload()
+        if(window.location.pathname == '/'){
+          window.location.reload()
+        }
         toast.success('Database Populated', {autoClose: 2000, theme: 'colored' })
     } catch (error) {
         setIsLoading(false)

@@ -81,8 +81,9 @@ const AddItems = () => {
             });
             let newproduct = data.data[0]
             setUserInventory([...userInventory, newproduct]);
-            setFilteredData([...filteredData, newproduct]);
+            setFilteredData(userInventory.filter(prod => prod.category.includes(selectedFilter)))
             clearForm();
+            // handleChange({ target: { value: selectedFilter } })
             toast.success('Product added successfully', { autoClose: 500, theme: 'colored' });
         } catch (error) {
             setIsLoading(false);
@@ -105,7 +106,6 @@ const AddItems = () => {
 
     const handleChange = (e) => {
         //filter setProductData based on e.target.value
-       
         if (e.target.value === selectedFilter) {
             setSelectedFilter('')
             setFilteredData(userInventory)
@@ -227,7 +227,7 @@ const AddItems = () => {
                     {loading}
                     <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
                         {filteredData.map(prod => (
-                            <ProductCard key={prod.id + prod.user.name} prod={prod} isUserProduct={true} />
+                            <ProductCard key={prod.id + prod.user.name} prod={prod} isUserProduct={true} isEditable={selectedFilter=='onSale'} />
                         ))}
                     </Container>
                 </Container >

@@ -106,12 +106,12 @@ const Cart = () => {
     }
 
     const proceedToCheckout = async () => {
+        console.log(`proceeding to checkout ${cart}`);
         if (cart.length <= 0) {
             toast.error("Please add items in cart to proceed", { autoClose: 500, theme: 'colored' })
         }
         else {
             try {
-                setIsLoading(true)
                 console.log("placing order "); 
                 cart.forEach((product) => {
                     product.buyer_id = localStorage.getItem('user_id')
@@ -126,12 +126,11 @@ const Cart = () => {
                         }
                     }
                 );
-                setIsLoading(false)
                 console.log(data);
                 clearCart()
                 toast.success("order placed", { autoClose: 500, theme: 'colored' })
             } catch (error) {
-                console.log(error.response.data);
+                console.log(error);
                 if(error.response.data.errorCode === 40401){
                     toast.error(`Product no longer exists: ${error.response.data.productName}`, { autoClose: 1000, theme: 'colored' })
                     setOpenAlert(true)

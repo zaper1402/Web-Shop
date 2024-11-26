@@ -204,7 +204,7 @@ def add_inventory(request):
         except:
             savedProduct, created = Product.objects.get_or_create(name=product.name, description=product.description, price=product.price)
             if savedProduct:
-                inventory = Inventory(product=savedProduct, quantity=quantity, user=user)
+                inventory = Inventory(product=savedProduct, quantity=quantity, user=user,category="Purchased")
                 inventory.save()
             else:
                 return JsonResponse({'error': 'Product not created'}, status=404)
@@ -215,7 +215,8 @@ def add_inventory(request):
             'id': inventory.id,
             'user': model_to_dict(inventory.user, exclude=['password']),
             'product': product_data,
-            'quantity': inventory.quantity
+            'quantity': inventory.quantity,
+            'category': inventory.category
         })
         return JsonResponse({'message': 'Inventory added successfully','data': data}, status=201)
     else:
