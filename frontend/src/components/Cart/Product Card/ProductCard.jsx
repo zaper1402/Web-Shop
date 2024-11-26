@@ -13,7 +13,7 @@ export default function ProductCard({ prod, isUserProduct, isEditable}) {
     let authToken = localStorage.getItem('Authorization')
     let setProceed = authToken ? true : false
     const { cart, setCart} = useContext(ContextFunction)
-    const [productQuantity, setProductQuantity] = useState(1)
+    const [productQuantity, setProductQuantity] = useState(Math.min(quantity,1))
     const [updatedPrice, setUpdatedPrice] = useState(1)
     const [editProduct, setEditProduct] = useState(false)
     const [productPrice, setProductPrice] = useState(product.price)
@@ -26,7 +26,7 @@ export default function ProductCard({ prod, isUserProduct, isEditable}) {
                 if (existingProductIndex !== -1) {
                     console.log(`existing product index: ${existingProductIndex}`);
                     const updatedCart = [...cart];
-                    if (productQuantity > 0 && (updatedCart[existingProductIndex].quantity+productQuantity) >= quantity) {
+                    if (productQuantity > 0 && (updatedCart[existingProductIndex].quantity+productQuantity) > quantity) {
                         toast.error("Quantity in cart exceeds stock", { autoClose: 500, theme: 'colored' })
                     }else if (productQuantity > 0) {
                         updatedCart[existingProductIndex].quantity += productQuantity;
@@ -36,7 +36,11 @@ export default function ProductCard({ prod, isUserProduct, isEditable}) {
                         updateCartToServer(updatedCart);
                     }
                 } else {
-                    if (productQuantity > 0) {
+                    if(productQuantity === 0){
+                        toast.error("Quantity cannot be zero", { autoClose: 500, theme: 'colored' })
+                    }else if (productQuantity > quantity) {
+                        toast.error("Quantity exceeds stock", { autoClose: 500, theme: 'colored' })
+                    }else if (productQuantity > 0) {
                         const updatedCart = [...cart, { ...prod, quantity: productQuantity }];
                         updateCartToServer(updatedCart);
                     }
