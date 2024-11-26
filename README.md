@@ -43,6 +43,6 @@ Email : ashir.kulshreshtha@abo.fi
 2) **Item in sold category appear once they are completely sold out (0 in stock). 
 
 
-## backend APIto clear DB
+## backend API to clear DB
 curl --location 'http://127.0.0.1:8000/shop/deleteAll' \
 --header 'Cookie: sessionid=eiwe4x6iatfmr4a0hfnycxz98zw5eh0p'
