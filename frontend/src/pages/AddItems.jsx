@@ -70,18 +70,28 @@ const AddItems = () => {
             formData.append('image', newProduct.image);
             formData.append('quantity', quantity);
             formData.append('user_id', localStorage.getItem('user_id'));
-            
+            if(quantity < 1){
+                toast.error('Quantity must be greater than 0', { autoClose: 300, theme: 'colored' });
+                return;
+            }else if(newProduct.price < 1){
+                toast.error('Price must be greater than 0', { autoClose: 300, theme: 'colored' });
+                return;
+            }
             console.log('FormData contents:', [...formData.entries()]); // Debug log
 
-            const { data } = await axios.post(`${baseUrl}${add_inventoryUrl}`, formData, {
+            const { data, status } = await axios.post(`${baseUrl}${add_inventoryUrl}`, formData, {
                 headers: {
                     'Authorization': localStorage.getItem('Authorization'),
                     'Content-Type': 'multipart/form-data'
                 }
+            }).catch(error => {
+                toast.error('An error occurred, please try again', { autoClose: 300, theme: 'colored' });
             });
             let newproduct = data.data[0]
-            setUserInventory([...userInventory, newproduct]);
-            setFilteredData(userInventory.filter(prod => prod.category.includes(selectedFilter)))
+        
+            const updatedInventory = [...userInventory, newproduct];
+            setUserInventory(updatedInventory);
+            setFilteredData(updatedInventory.filter(prod => prod.category.includes(selectedFilter)));
             clearForm();
             // handleChange({ target: { value: selectedFilter } })
             toast.success('Product added successfully', { autoClose: 500, theme: 'colored' });

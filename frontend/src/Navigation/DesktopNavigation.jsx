@@ -11,7 +11,7 @@ import {  handleLogOut, handleClickOpen, handleClose, getUserProducts, getCart }
 
 const DesktopNavigation = () => {
 
-  const { cart, setCart, userInventory, setUserInventory} = useContext(ContextFunction)
+  const { cart, setCart, userInventory, setUserInventory, products, setProducts} = useContext(ContextFunction)
   const [openAlert, setOpenAlert] = useState(false);
   const navigate = useNavigate()
   let authToken = localStorage.getItem('Authorization');
@@ -92,7 +92,7 @@ const DesktopNavigation = () => {
         </DialogContent>
         <DialogActions sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
           <Link to="/">
-            <Button variant='contained' endIcon={<FiLogOut />} color='primary' onClick={() => handleLogOut(setProceed, toast, navigate, setOpenAlert,setCart,setUserInventory)}>Logout</Button></Link>
+            <Button variant='contained' endIcon={<FiLogOut />} color='primary' onClick={() => handleLogOut(setProceed, toast, navigate, setOpenAlert,setCart,setProducts)}>Logout</Button></Link>
           <Button variant='contained' color='error' endIcon={<AiFillCloseCircle />} onClick={() => handleClose(setOpenAlert)}>Close</Button>
         </DialogActions>
       </Dialog>

@@ -205,12 +205,13 @@ def add_inventory(request):
         except:
             savedProduct, created = Product.objects.get_or_create(name=product.name, description=product.description, price=product.price, image=product.image)
             if savedProduct:
-                inventory = Inventory(product=savedProduct, quantity=quantity, user=user,category="Purchased")
+                inventory = Inventory(product=savedProduct, quantity=quantity, user=user,category="onSale")
                 inventory.save()
             else:
                 return JsonResponse({'error': 'Product not created'}, status=404)
         product_data = model_to_dict(inventory.product, exclude=['image'])
-        print(inventory.product.image.url)
+        if(inventory.product.image):
+            print(inventory.product.image.url)
         product_data['image'] = inventory.product.image.url if inventory.product.image else ''
         data = []
         data.append({

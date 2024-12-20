@@ -1,8 +1,22 @@
 import axios from 'axios';
 import {baseUrl,allInventoryUrl, get_inventory,get_cart} from '../Constants/urls'
 
+const getAllInventory = async (setData) => {
+    try {
+        const { data } = await axios.post(`${baseUrl}${allInventoryUrl}`, { "user_id": localStorage.getItem('user_id') },
+                {
+                    headers: {
+                        'Authorization': localStorage.getItem('Authorization')
+                    }
+                }
+            );
+        setData(data)
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-const handleLogOut = (setProceed, toast, navigate, setOpenAlert,setCart,setUserInventory) => {
+const handleLogOut = (setProceed, toast, navigate, setOpenAlert,setCart,setProducts) => {
     if (setProceed) {
         localStorage.removeItem('Authorization')
         localStorage.removeItem('user_id')
@@ -10,7 +24,11 @@ const handleLogOut = (setProceed, toast, navigate, setOpenAlert,setCart,setUserI
         localStorage.removeItem('password')
         
         toast.success("Logout Successfully", { autoClose: 500, theme: 'colored' })
-        navigate('/')
+        if(window.location.pathname !== '/'){
+            navigate('/')
+        }else{
+            window.location.reload()
+        }
         setOpenAlert(false)
     }
     else {
@@ -26,20 +44,7 @@ const handleClose = (setOpenAlert) => {
     setOpenAlert(false);
 };
 
-const getAllInventory = async (setData) => {
-    try {
-        const { data } = await axios.post(`${baseUrl}${allInventoryUrl}`, { "user_id": localStorage.getItem('user_id') },
-                {
-                    headers: {
-                        'Authorization': localStorage.getItem('Authorization')
-                    }
-                }
-            );
-        setData(data)
-    } catch (error) {
-        console.log(error);
-    }
-}
+
 
 const getCart = async (setProceed, setCart) => {
     if (setProceed) {
