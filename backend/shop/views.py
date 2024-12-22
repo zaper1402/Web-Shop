@@ -401,8 +401,8 @@ def populate_db(request):
     for i in range(1, 7):
         hashed_password = make_password(f'pass{i}')
         user = User.objects.create(
-            name=f'testuser{i}',
-            email=f'testuser{i}@shop.aa',
+            name=f'testUser{i}',
+            email=f'testUser{i}@shop.aa',
             password=hashed_password
         )
         users.append(user)
