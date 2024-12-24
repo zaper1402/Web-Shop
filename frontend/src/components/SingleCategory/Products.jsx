@@ -21,11 +21,13 @@ const Products = () => {
         window.scroll(0, 0)
     }, [])
 
-    const getCategoryProduct = async () => {
+    const getCategoryProduct = async (query) => {
         try {
             setIsLoading(true)
             console.log(`loading product data `);
-            const { data } = await axios.post(`${baseUrl}${allInventoryUrl}`, { "user_id": localStorage.getItem('user_id') },
+            const { data } = await axios.post(`${baseUrl}${allInventoryUrl}`, { "user_id": localStorage.getItem('user_id'),
+                'name': query
+             },
                 {
                     headers: {
                         'Authorization': localStorage.getItem('Authorization')
@@ -46,6 +48,7 @@ const Products = () => {
 
     const handleChange = (e) => {
         //filter setProducts based on e.target.value
+        getCategoryProduct(e.target.value)
         if (e.target.value === undefined || e.target.value === 'All' || e.target.value === '') {
             setFilteredData(products)
         } else {

@@ -43,6 +43,8 @@ function App() {
         if(isLoading) {
           toast.info('Populating Database please wait for success', {autoClose: 2000, theme: 'colored' })
           return
+        }else{
+          toast.info('Populating Database please wait for success', {autoClose: 2000, theme: 'colored' })
         }
         setIsLoading(true)
         const { data } = await axios.get(`${baseUrl}${populate_db}`,
@@ -71,7 +73,7 @@ function App() {
       <DesktopNav />
       <div className='margin'></div>
 
-      {!setProceed && (window.location.pathname == '/login' || window.location.pathname == '/signup' || products.length == 0) &&
+      {!setProceed && (window.location.pathname == '/login' || window.location.pathname == '/signup' || window.location.pathname == '/' || products.length == 0) &&
                 <Button variant='contained' className='nav-icon-span' sx={{ marginBottom: 1, marginInlineStart: 10 }} onClick={() => populateDB()} >
                     <Typography variant='button'> Populate DB</Typography>
                 </Button>

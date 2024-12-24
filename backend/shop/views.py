@@ -56,7 +56,10 @@ def login(request):
         password = request.POST.get('password')
         # Authenticate user
         try:
-            user = User.objects.get(email=email)
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                user = User.objects.get(name=email)
             print(user.password, password)
             if check_password(password, user.password):
                 token = str(uuid.uuid4())
@@ -121,7 +124,11 @@ def get_products(request):
 def get_inventory(request):
     jdata = json.loads(request.body)
     user_id = jdata.get('user_id')
-    inventory = Inventory.objects.all().exclude(user_id=user_id).exclude(category="Purchased")
+    name = jdata.get('name')
+    if name and name != "":
+        inventory = Inventory.objects.filter( product__name__icontains=name).exclude(user_id=user_id).exclude(category="Purchased")
+    else :
+        inventory = Inventory.objects.all().exclude(user_id=user_id).exclude(category="Purchased")
     data = []
     for item in inventory:
         product_data = model_to_dict(item.product, exclude=['image'])
@@ -401,8 +408,8 @@ def populate_db(request):
     for i in range(1, 7):
         hashed_password = make_password(f'pass{i}')
         user = User.objects.create(
-            name=f'testUser{i}',
-            email=f'testUser{i}@shop.aa',
+            name=f'testuser{i}',
+            email=f'testuser{i}@shop.aa',
             password=hashed_password
         )
         users.append(user)

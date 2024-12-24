@@ -62,6 +62,7 @@ const Register = () => {
           console.log(`User Id recieved: ${receive.user_id}`);
           localStorage.setItem('Authorization', receive.authToken)
           localStorage.setItem('user_id', receive.user_id)
+          localStorage.setItem('password', credentials.password)
           navigate('/')
           console.log(receive);
         }

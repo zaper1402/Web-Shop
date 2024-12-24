@@ -98,7 +98,7 @@ const Login = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email Address/Username"
             value={credentials.email}
             name='email'
             onChange={handleOnChange}
