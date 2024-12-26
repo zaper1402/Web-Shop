@@ -99,8 +99,9 @@ export default function ProductCard({ prod, isUserProduct}) {
         }
     }
 
-    const decodeImage = (image) => {
-        return `data:image/jpg;base64,${image}`;
+    const decodeImage = (image, type) => {
+        const mimeType = type === 'jpeg' || type === 'jpg' ? 'jpeg' : type;
+        return `data:image/${mimeType};base64,${image}`;
     };
     const imageSrc = React.useMemo(() => decodeImage(product.image), [product.image]);
     return (
