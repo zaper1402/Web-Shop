@@ -11,6 +11,7 @@ export default function ProductCard({ prod, isUserProduct}) {
     const product = prod.product
     const quantity = prod.quantity
     let authToken = localStorage.getItem('Authorization')
+    let user_id = localStorage.getItem('user_id')
     let setProceed = authToken ? true : false
     const { cart, setCart} = useContext(ContextFunction)
     const [productQuantity, setProductQuantity] = useState(Math.min(quantity,1))
@@ -26,7 +27,7 @@ export default function ProductCard({ prod, isUserProduct}) {
                     console.log(`existing product index: ${existingProductIndex}`);
                     const updatedCart = [...cart];
                     if (productQuantity > 0 && (updatedCart[existingProductIndex].quantity+productQuantity) > quantity) {
-                        toast.error("Quantity in cart exceeds stock", { autoClose: 500, theme: 'colored' })
+                        toast.error("Added quantity + Quantity in cart exceeds stock", { autoClose: 500, theme: 'colored' })
                     }else if (productQuantity > 0) {
                         updatedCart[existingProductIndex].quantity += productQuantity;
                         updateCartToServer(updatedCart);
@@ -38,7 +39,7 @@ export default function ProductCard({ prod, isUserProduct}) {
                     if(productQuantity === 0){
                         toast.error("Quantity cannot be zero", { autoClose: 500, theme: 'colored' })
                     }else if (productQuantity > quantity) {
-                        toast.error("Quantity exceeds stock", { autoClose: 500, theme: 'colored' })
+                        toast.error("Quantityexceeds stock", { autoClose: 500, theme: 'colored' })
                     }else if (productQuantity > 0) {
                         const updatedCart = [...cart, { ...prod, quantity: productQuantity }];
                         updateCartToServer(updatedCart);
@@ -133,19 +134,20 @@ export default function ProductCard({ prod, isUserProduct}) {
                         €{productPrice}
                     </Typography>
                 }
-                <ButtonGroup variant="outlined" aria-label="outlined button group">
-                    {!isUserProduct && <Button onClick={decreaseQuantity}>-</Button>}
-                    {!isUserProduct && <Button>{productQuantity}</Button>}
-                    {!isUserProduct && <Button onClick={increaseQuantity}>+</Button>}
-                </ButtonGroup>
+                {!isUserProduct && setProceed && prod.user.id != user_id && prod.category != 'Sold' && <ButtonGroup variant="outlined" aria-label="outlined button group">
+                    <Button onClick={decreaseQuantity}>-</Button>
+                    <Button>{productQuantity}</Button>
+                    <Button onClick={increaseQuantity}>+</Button>
+                </ButtonGroup>}
             </CardActions>
-            <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color="primary">
+            <Typography sx={{ textAlign: "center", width: '100%'}} variant="h6" color={quantity==0?"red":"primary"}>
                 {quantity} in stock
             </Typography>
             <Typography gutterBottom variant="h8" sx={{ textAlign: "center" }}>
                 Date Added : {product.date_added.slice(0, 10)}
             </Typography>
-            {!isUserProduct && setProceed && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
+            {!isUserProduct && prod.user.id == user_id && <Typography gutterBottom variant="h8" color='green' sx={{ textAlign: "center" }}> User Product</Typography>}
+            {!isUserProduct && prod.user.id != user_id && prod.category != 'Sold' && setProceed && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
             {prod.category == 'onSale' && isUserProduct && <Button onClick={() => setEditProduct(!editProduct)} variant="contained" color="primary" fullWidth>Edit Product</Button> }
         </Card >
     );

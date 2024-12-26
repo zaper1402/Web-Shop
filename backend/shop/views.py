@@ -126,9 +126,9 @@ def get_inventory(request):
     user_id = jdata.get('user_id')
     name = jdata.get('name')
     if name and name != "":
-        inventory = Inventory.objects.filter( product__name__icontains=name).exclude(user_id=user_id).exclude(category="Purchased")
+        inventory = Inventory.objects.filter( product__name__icontains=name).exclude(category="Purchased")
     else :
-        inventory = Inventory.objects.all().exclude(user_id=user_id).exclude(category="Purchased")
+        inventory = Inventory.objects.all().exclude(category="Purchased")
     data = []
     for item in inventory:
         product_data = model_to_dict(item.product, exclude=['image'])
