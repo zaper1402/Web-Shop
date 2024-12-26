@@ -237,7 +237,7 @@ const AddItems = () => {
                     {loading}
                     <Container maxWidth='xl' style={{ marginTop: 10, display: "flex", justifyContent: 'center', flexWrap: "wrap", paddingBottom: 20, marginBottom: 30, width: '100%' }}>
                         {filteredData.map(prod => (
-                            <ProductCard key={prod.id + prod.user.name} prod={prod} isUserProduct={true} isEditable={selectedFilter=='onSale'} />
+                            <ProductCard key={prod.id + prod.user.name} prod={prod} isUserProduct={true}/>
                         ))}
                     </Container>
                 </Container >

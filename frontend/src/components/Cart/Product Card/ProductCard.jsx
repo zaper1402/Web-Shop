@@ -7,7 +7,7 @@ import { baseUrl, update_product,set_cart} from '../../../Constants/urls';
 import axios from 'axios';
 
 
-export default function ProductCard({ prod, isUserProduct, isEditable}) {
+export default function ProductCard({ prod, isUserProduct}) {
     const product = prod.product
     const quantity = prod.quantity
     let authToken = localStorage.getItem('Authorization')
@@ -17,7 +17,6 @@ export default function ProductCard({ prod, isUserProduct, isEditable}) {
     const [updatedPrice, setUpdatedPrice] = useState(1)
     const [editProduct, setEditProduct] = useState(false)
     const [productPrice, setProductPrice] = useState(product.price)
-
     const addToCart = async (product) => {
         if (setProceed) {
             try {
@@ -147,7 +146,7 @@ export default function ProductCard({ prod, isUserProduct, isEditable}) {
                 Date Added : {product.date_added.slice(0, 10)}
             </Typography>
             {!isUserProduct && setProceed && <Button onClick={() => addToCart(prod)} variant="contained" color="primary" fullWidth>Add To Cart</Button> }
-            {isEditable && <Button onClick={() => setEditProduct(!editProduct)} variant="contained" color="primary" fullWidth>Edit Product</Button> }
+            {prod.category == 'onSale' && isUserProduct && <Button onClick={() => setEditProduct(!editProduct)} variant="contained" color="primary" fullWidth>Edit Product</Button> }
         </Card >
     );
 }
